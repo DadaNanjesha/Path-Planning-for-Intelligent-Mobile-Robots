@@ -209,7 +209,7 @@ class AStarAlgorithm:
             `n1` and `n2` multiplied by the weight `w`.
         """
 
-        w = 1.0  # weight of heuristic
+        w = 1.0
         d = w * math.hypot(n1.x - n2.x, n1.y - n2.y)
         return d
 
@@ -353,13 +353,12 @@ def main():
     """
     print(__file__ + " start!!")
 
-    # start and goal position
-    sx = 10.0  # [m]
-    sy = 10.0  # [m]
-    gx = 50.0  # [m]
-    gy = 50.0  # [m]
-    grid_size = 2.0  # [m]
-    robot_radius = 2.0  # [m]
+    sx = 10.0
+    sy = 10.0
+    gx = 50.0
+    gy = 50.0
+    grid_size = 2.0
+    robot_radius = 2.0
 
     # set obstacle positions
     x_obs, y_obs = [], []
@@ -383,7 +382,8 @@ def main():
         x_obs.append(40.0)
         y_obs.append(60.0 - i)
 
-    if show_animation:  # pragma: no cover
+    if show_animation:
+        plt.title("A Star Algorithm")
         plt.plot(x_obs, y_obs, ".r")
         plt.plot(sx, sy, "og")
         plt.plot(gx, gy, "ob")
@@ -393,8 +393,9 @@ def main():
     a_star = AStarAlgorithm(x_obs, y_obs, grid_size, robot_radius)
     rx, ry = a_star.planning(sx, sy, gx, gy)
 
-    if show_animation:  # pragma: no cover
+    if show_animation:
         plt.plot(rx, ry, "-b")
+
         plt.pause(0.001)
         plt.show()
 
