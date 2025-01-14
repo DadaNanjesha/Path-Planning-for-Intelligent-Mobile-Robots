@@ -1,5 +1,6 @@
 import math
 import matplotlib.pyplot as plt
+import time
 
 show_animation = True
 
@@ -70,25 +71,10 @@ class AStarAlgorithm:
             )
 
     def planning(self, sx, sy, gx, gy):
-        """
-        The function `planning` implements the A* algorithm to find a path from a start node to a goal
-        node on a grid.
-
-        :param sx: The parameter `sx` in the `planning` function represents the x-coordinate of the
-            start position for path planning. It is used to create the start node for the pathfinding
-            algorithm
-        :param sy: The parameter `sy` in the `planning` function represents the y-coordinate of the
-            starting point in a path planning algorithm. It is used to specify the initial y-coordinate of
-            the robot or object for which the path needs to be planned
-        :param gx: The parameter `gx` in the `planning` function represents the x-coordinate of the goal
-            position in the grid. It is used to create a goal node for path planning from the start position
-            (sx, sy) to the goal position (gx, gy) on the grid
-        :param gy: The parameter `gy` in the `planning` function represents the y-coordinate of the goal
-            position in a grid-based path planning algorithm. It is used to specify the y-coordinate of the
-            goal node where the path planning algorithm will try to navigate the robot or agent to
-        :return: The `planning` function returns the final path `rx` and `ry` after finding the goal
-            node in the search grid.
-        """
+        start_time = time.time()
+        path_length = 0
+        direction_changes = 0
+        steps = 0
 
         start_node = self.Node(
             self.calc_xy_index(sx, self.x_min),
@@ -117,6 +103,7 @@ class AStarAlgorithm:
                 + self.calc_heuristic(goal_node, open_set[o]),
             )
             current = open_set[c_id]
+            steps += 1
 
             if show_animation:
                 plt.plot(
@@ -163,6 +150,23 @@ class AStarAlgorithm:
                         open_set[n_id] = node
 
         rx, ry = self.calc_final_path(goal_node, closed_set)
+
+        # Calculate Path Length and Direction Changes
+        if rx and ry:
+            for i in range(1, len(rx)):
+                path_length += math.hypot(rx[i] - rx[i - 1], ry[i] - ry[i - 1])
+                if i > 1:
+                    prev_dir = (rx[i - 1] - rx[i - 2], ry[i - 1] - ry[i - 2])
+                    curr_dir = (rx[i] - rx[i - 1], ry[i] - ry[i - 1])
+                    if prev_dir != curr_dir:
+                        direction_changes += 1
+
+        execution_time = time.time() - start_time
+
+        print(f"Execution Time: {execution_time:.2f} seconds")
+        print(f"Path Length: {path_length:.2f}")
+        print(f"Steps Taken: {steps}")
+        print(f"Direction Changes: {direction_changes}")
 
         return rx, ry
 
@@ -374,11 +378,11 @@ def main():
     for i in range(-10, 61):
         x_obs.append(-10.0)
         y_obs.append(i)
-    for i in range(-10, 30):
+    for i in range(0, 40):
         for j in range(10, 20):
             x_obs.append(i)
-            y_obs.append(13.0)
-    for i in range(0, 40):
+            y_obs.append(15)
+    for i in range(10, 60):
         x_obs.append(40.0)
         y_obs.append(60.0 - i)
 
@@ -398,6 +402,7 @@ def main():
 
         plt.pause(0.001)
         plt.show()
+        plt.close()
 
 
 if __name__ == "__main__":
