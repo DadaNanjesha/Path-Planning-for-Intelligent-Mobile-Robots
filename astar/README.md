@@ -13,4 +13,4 @@ A* uses a best-first search and finds the least-cost path from a given start nod
 ### Visualization
 Below is a visualization of the A* algorithm in action:
 
-![A* Algorithm](media/astar.gif)
+![A* Algorithm](/media/astar.gif)
