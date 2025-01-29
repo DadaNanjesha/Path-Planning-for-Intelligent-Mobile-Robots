@@ -170,3 +170,4 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 .vscode/PythonImportHelper-v2-Completion.json
+.vscode/settings.json
