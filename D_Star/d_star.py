@@ -1,247 +1,226 @@
 import math
-from sys import maxsize
+import time
+import networkx as nx
 import matplotlib.pyplot as plt
 
-show_animation = True
 
+class DStarAlgorithm:
+    def __init__(self, x_obs, y_obs, resol, radius):
+        """
+        Initialize the D* algorithm with obstacles and parameters.
+        """
+        self.resol = resol
+        self.radius = radius
+        self.graph = nx.Graph()
+        self.obstacles = set()
+        self.motion = self.motion_mod()
+        self.build_graph(x_obs, y_obs)
 
-class instant_state:
+    def build_graph(self, x_obs, y_obs):
+        """
+        Build the graph with nodes, edges, and obstacles.
+        """
+        self.x_min = round(min(x_obs))
+        self.y_min = round(min(y_obs))
+        self.max_x = round(max(x_obs))
+        self.max_y = round(max(y_obs))
 
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-        self.parent = None
-        self.instant_state = "."
-        self.t = "new"
-        self.h = 0
-        self.k = 0
+        # Add nodes to the graph
+        for x in range(self.x_min, self.max_x + 1):
+            for y in range(self.y_min, self.max_y + 1):
+                self.graph.add_node((x, y))
 
-    def cost(self, instant_state):
-        if self.instant_state == "#" or instant_state.instant_state == "#":
-            return maxsize
-
-        return math.sqrt(
-            math.pow((self.x - instant_state.x), 2)
-            + math.pow((self.y - instant_state.y), 2)
-        )
-
-    def set_state(self, instant_state):
-        if instant_state not in ["s", ".", "#", "e", "*"]:
-            return
-        self.instant_state = instant_state
-
-
-class Layout:
-
-    def __init__(self, row, col):
-        self.row = row
-        self.col = col
-        self.graph = self.init_map()
-
-    def init_map(self):
-        map_list = []
-        for i in range(self.row):
-            tmp = []
-            for j in range(self.col):
-                tmp.append(instant_state(i, j))
-            map_list.append(tmp)
-        return map_list
-
-    def get_neighbors(self, instant_state):
-        state_list = []
-        for i in [-1, 0, 1]:
-            for j in [-1, 0, 1]:
-                if i == 0 and j == 0:
-                    continue
-                if instant_state.x + i < 0 or instant_state.x + i >= self.row:
-                    continue
-                if instant_state.y + j < 0 or instant_state.y + j >= self.col:
-                    continue
-                state_list.append(self.graph[instant_state.x + i][instant_state.y + j])
-        return state_list
-
-    def set_obstacle(self, point_list):
-        for x, y in point_list:
-            if x < 0 or x >= self.row or y < 0 or y >= self.col:
-                continue
-
-            self.graph[x][y].set_state("#")
-
-
-class Dstar:
-    def __init__(self, maps):
-        self.graph = maps
-        self.open_list = set()
-
-    def process_state(self):
-        x = self.min_state()
-
-        if x is None:
-            return -1
-
-        k_old = self.get_kmin()
-        self.remove(x)
-
-        if k_old < x.h:
-            for y in self.graph.get_neighbors(x):
-                if y.h <= k_old and x.h > y.h + x.cost(y):
-                    x.parent = y
-                    x.h = y.h + x.cost(y)
-        if k_old == x.h:
-            for y in self.graph.get_neighbors(x):
-                if (
-                    y.t == "new"
-                    or y.parent == x
-                    and y.h != x.h + x.cost(y)
-                    or y.parent != x
-                    and y.h > x.h + x.cost(y)
+        # Add obstacles
+        for ox, oy in zip(x_obs, y_obs):
+            for x in range(
+                max(self.x_min, int(ox - self.radius)),
+                min(self.max_x, int(ox + self.radius)) + 1,
+            ):
+                for y in range(
+                    max(self.y_min, int(oy - self.radius)),
+                    min(self.max_y, int(oy + self.radius)) + 1,
                 ):
-                    y.parent = x
-                    self.insert(y, x.h + x.cost(y))
+                    if math.hypot(ox - x, oy - y) <= self.radius:
+                        obstacle_node = (x, y)
+                        if obstacle_node in self.graph:
+                            self.obstacles.add(obstacle_node)
+                            self.graph.remove_node(obstacle_node)
+
+        # Connect nodes based on motion
+        for node in list(self.graph.nodes):
+            for dx, dy, cost in self.motion:
+                neighbor = (node[0] + dx, node[1] + dy)
+                if neighbor in self.graph:
+                    self.graph.add_edge(node, neighbor, weight=cost)
+
+    @staticmethod
+    def motion_mod():
+        """
+        Define motion vectors for an 8-connected grid.
+        """
+        return [
+            (1, 0, 1),
+            (0, 1, 1),
+            (-1, 0, 1),
+            (0, -1, 1),
+            (-1, -1, math.sqrt(2)),
+            (-1, 1, math.sqrt(2)),
+            (1, -1, math.sqrt(2)),
+            (1, 1, math.sqrt(2)),
+        ]
+
+    def d_star_planning(
+        self, sx, sy, gx, gy, dynamic_visualization=False, pause_time=0.2
+    ):
+        """
+        Perform D* path planning with dynamic visualization.
+        """
+        start_time = time.time()
+
+        start = (int(sx), int(sy))
+        goal = (int(gx), int(gy))
+
+        if start not in self.graph or goal not in self.graph:
+            print("Start or goal node is invalid!")
+            return [], []
+
+        # For visualization
+        fig, ax = plt.subplots(figsize=(10, 10))
+        pos = {node: (node[0], node[1]) for node in self.graph.nodes}
+        nx.draw(
+            self.graph,
+            pos,
+            node_size=10,
+            node_color="yellow",
+            edge_color="lightgray",
+            alpha=0.6,
+            ax=ax,
+        )
+        ax.scatter(*zip(*self.obstacles), color="black", label="Obstacles", s=15)
+        ax.scatter(*start, color="blue", label="Start", s=50)
+        ax.scatter(*goal, color="green", label="Goal", s=50)
+        plt.legend()
+
+        # Save the original axis limits
+        original_xlim = ax.get_xlim()
+        original_ylim = ax.get_ylim()
+
+        # Perform D* Search
+        try:
+            path, explored_nodes = self.d_star_search(start, goal)
+            print("Final Path Nodes:", path)
+        except nx.NetworkXNoPath:
+            print("No path found!")
+            plt.title("No Path Found")
+            plt.show()
+            return [], []
+
+        # Dynamic visualization of explored nodes
+        if dynamic_visualization:
+            for node in explored_nodes:
+                ax.scatter(node[0], node[1], color="red", s=20)
+                plt.pause(pause_time)
+
+        # Ensure all dynamic elements remain
+        plt.draw()
+
+        # Plot the final path
+        if path and len(path) > 1:
+            rx, ry = zip(*path)
+            ax.plot(rx, ry, color="red", label="Final Path", linewidth=2, zorder=10)
+            print("Final Path Plotted Successfully.")
         else:
-            for y in self.graph.get_neighbors(x):
-                if y.t == "new" or y.parent == x and y.h != x.h + x.cost(y):
-                    y.parent = x
-                    self.insert(y, x.h + x.cost(y))
-                else:
-                    if y.parent != x and y.h > x.h + x.cost(y):
-                        self.insert(x, x.h)
-                    else:
-                        if (
-                            y.parent != x
-                            and x.h > y.h + x.cost(y)
-                            and y.t == "close"
-                            and y.h > k_old
-                        ):
-                            self.insert(y, y.h)
-        return self.get_kmin()
+            print("No valid path found to plot.")
 
-    def min_state(self):
-        if not self.open_list:
-            return None
-        min_state = min(self.open_list, key=lambda x: x.k)
-        return min_state
+        # Restore original zoom level
+        ax.set_xlim(original_xlim)
+        ax.set_ylim(original_ylim)
 
-    def get_kmin(self):
-        if not self.open_list:
-            return -1
-        k_min = min([x.k for x in self.open_list])
-        return k_min
+        # Metrics
+        path_length = self.calculate_path_length(path)
+        execution_time = time.time() - start_time
 
-    def insert(self, instant_state, h_new):
-        if instant_state.t == "new":
-            instant_state.k = h_new
-        elif instant_state.t == "open":
-            instant_state.k = min(instant_state.k, h_new)
-        elif instant_state.t == "close":
-            instant_state.k = min(instant_state.h, h_new)
-        instant_state.h = h_new
-        instant_state.t = "open"
-        self.open_list.add(instant_state)
+        print(f"Execution Time: {execution_time:.2f} seconds")
+        print(f"Path Length: {path_length:.2f}")
+        print(f"Steps Taken: {len(path)}")
 
-    def remove(self, instant_state):
-        if instant_state.t == "open":
-            instant_state.t = "close"
-        self.open_list.remove(instant_state)
-
-    def modify_cost(self, x):
-        if x.t == "close":
-            self.insert(x, x.parent.h + x.cost(x.parent))
-
-    def run(self, start, end):
-
-        rx = []
-        ry = []
-
-        self.insert(end, 0.0)
-
-        while True:
-            self.process_state()
-            if start.t == "close":
-                break
-
-        start.set_state("s")
-        s = start
-        s = s.parent
-        s.set_state("e")
-        tmp = start
-
-        AddNewObstacle(self.graph)  # add new obstacle after the first search finished
-
-        while tmp != end:
-            tmp.set_state("*")
-            rx.append(tmp.x)
-            ry.append(tmp.y)
-            if show_animation:
-                plt.plot(rx, ry, "-g")
-                plt.pause(0.01)
-            if tmp.parent.instant_state == "#":
-                self.modify(tmp)
-                continue
-            tmp = tmp.parent
-        tmp.set_state("e")
+        plt.title("D* Path Planning")
+        plt.legend()
+        plt.show()
 
         return rx, ry
 
-    def modify(self, instant_state):
-        self.modify_cost(instant_state)
-        while True:
-            k_min = self.process_state()
-            if k_min >= instant_state.h:
-                break
+    def d_star_search(self, start, goal):
+        """
+        Perform the D* search algorithm.
+        """
+        explored_nodes = set()
 
+        try:
+            path = nx.astar_path(
+                self.graph, start, goal, heuristic=self.calc_heuristic, weight="weight"
+            )
+            explored_nodes.update(path)  # Mark explored nodes
+            return path, explored_nodes
+        except nx.NetworkXNoPath:
+            raise nx.NetworkXNoPath("No path found!")
 
-def AddNewObstacle(graph: Layout):
-    o_x, o_y = [], []
-    for i in range(5, 30):
-        o_x.append(i)
-        o_y.append(0)
-    graph.set_obstacle([(i, j) for i, j in zip(o_x, o_y)])
-    if show_animation:
-        plt.pause(0.001)
-        plt.plot(o_x, o_y, ".k")
+    @staticmethod
+    def calc_heuristic(n1, n2):
+        """
+        Calculate Euclidean distance as a heuristic.
+        """
+        return math.hypot(n1[0] - n2[0], n1[1] - n2[1])
+
+    @staticmethod
+    def calculate_path_length(path):
+        """
+        Calculate the total length of the path.
+        """
+        return sum(
+            math.hypot(path[i + 1][0] - path[i][0], path[i + 1][1] - path[i][1])
+            for i in range(len(path) - 1)
+        )
 
 
 def main():
-    m = Layout(100, 100)
-    o_x, o_y = [], []
+    """
+    Main function to execute D* algorithm.
+    """
+    sx, sy = 10.0, 10.0  # Start position
+    gx, gy = 50.0, 50.0  # Goal position
+    grid_size = 1.0  # Grid resolution
+    robot_radius = 2.0  # Robot size (used for obstacle clearance)
+
+    # Define obstacle positions
+    x_obs, y_obs = [], []
     for i in range(-10, 60):
-        o_x.append(i)
-        o_y.append(-10)
+        x_obs.append(i)
+        y_obs.append(-10.0)
     for i in range(-10, 60):
-        o_x.append(60)
-        o_y.append(i)
+        x_obs.append(60.0)
+        y_obs.append(i)
     for i in range(-10, 61):
-        o_x.append(i)
-        o_y.append(60)
+        x_obs.append(i)
+        y_obs.append(60.0)
     for i in range(-10, 61):
-        o_x.append(-10)
-        o_y.append(i)
-    for i in range(0, 50):
-        for j in range(0, 20):
-            o_x.append(i)
-            o_y.append(20)
-    for i in range(0, 60):
-        o_x.append(40)
-        o_y.append(60 - i)
-    m.set_obstacle([(i, j) for i, j in zip(o_x, o_y)])
+        x_obs.append(-10.0)
+        y_obs.append(i)
+    for i in range(0, 40):
+        for j in range(10, 20):
+            x_obs.append(i)
+            y_obs.append(15)
+    for i in range(10, 60):
+        x_obs.append(40.0)
+        y_obs.append(60.0 - i)
 
-    start = [10, 10]
-    goal = [50, 50]
-    if show_animation:
-        plt.plot(o_x, o_y, ".r")
-        plt.plot(start[0], start[1], "og")
-        plt.plot(goal[0], goal[1], "xb")
-        plt.axis("equal")
+    # Initialize D* algorithm
+    d_star = DStarAlgorithm(x_obs, y_obs, grid_size, robot_radius)
 
-    start = m.graph[start[0]][start[1]]
-    end = m.graph[goal[0]][goal[1]]
-    dstar = Dstar(m)
-    rx, ry = dstar.run(start, end)
-
-    if show_animation:
-        plt.plot(rx, ry, "-b")
-        plt.show()
+    # Run pathfinding algorithm with visualization
+    rx, ry = d_star.d_star_planning(
+        sx, sy, gx, gy, dynamic_visualization=True, pause_time=0.2
+    )
 
 
 if __name__ == "__main__":

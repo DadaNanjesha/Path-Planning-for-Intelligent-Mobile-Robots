@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 
 
 class AStarAlgorithm:
-
     def __init__(self, x_obs, y_obs, resol, radius):
         """
         Initialize the A* algorithm with obstacles and parameters.
@@ -26,27 +25,36 @@ class AStarAlgorithm:
         self.max_x = round(max(x_obs))
         self.max_y = round(max(y_obs))
 
-        # Add nodes to the graph
-        for x in range(self.x_min, self.max_x + 1):
-            for y in range(self.y_min, self.max_y + 1):
-                self.graph.add_node((x, y))
+        # Create grid nodes in one go.
+        nodes = [
+            (x, y)
+            for x in range(self.x_min, self.max_x + 1)
+            for y in range(self.y_min, self.max_y + 1)
+        ]
+        self.graph.add_nodes_from(nodes)
 
-        # Add obstacles
+        # Precompute squared radius to avoid repeated sqrt calculations.
+        r2 = self.radius**2
+
+        # Efficiently remove obstacle nodes by iterating only over a bounding box for each obstacle.
         for ox, oy in zip(x_obs, y_obs):
-            for x in range(self.x_min, self.max_x + 1):
-                for y in range(self.y_min, self.max_y + 1):
-                    if math.hypot(ox - x, oy - y) <= self.radius:
-                        obstacle_node = (x, y)
-                        if obstacle_node in self.graph:  # Ensure the node exists
-                            self.obstacles.add(obstacle_node)
-                            self.graph.remove_node(
-                                obstacle_node
-                            )  # Remove obstacle nodes
+            min_x_obs = max(self.x_min, int(math.floor(ox - self.radius)))
+            max_x_obs = min(self.max_x, int(math.ceil(ox + self.radius)))
+            min_y_obs = max(self.y_min, int(math.floor(oy - self.radius)))
+            max_y_obs = min(self.max_y, int(math.ceil(oy + self.radius)))
+            for x in range(min_x_obs, max_x_obs + 1):
+                for y in range(min_y_obs, max_y_obs + 1):
+                    if (ox - x) ** 2 + (oy - y) ** 2 <= r2:
+                        node = (x, y)
+                        if self.graph.has_node(node):
+                            self.obstacles.add(node)
+                            self.graph.remove_node(node)
 
-        # Connect nodes based on motion
-        for node in list(
+        # Connect remaining nodes based on allowed motions.
+        remaining_nodes = list(
             self.graph.nodes
-        ):  # Use a list to avoid concurrent modification
+        )  # Avoid issues with concurrent modification.
+        for node in remaining_nodes:
             for dx, dy, cost in self.motion:
                 neighbor = (node[0] + dx, node[1] + dy)
                 if neighbor in self.graph:
@@ -81,9 +89,9 @@ class AStarAlgorithm:
             print("Start or goal node is invalid!")
             return [], []
 
-        # Setup visualization
+        # Set up visualization.
         fig, ax = plt.subplots(figsize=(10, 10))
-        pos = {node: (node[0], node[1]) for node in self.graph.nodes}
+        pos = {node: node for node in self.graph.nodes}
         nx.draw(
             self.graph,
             pos,
@@ -93,7 +101,8 @@ class AStarAlgorithm:
             alpha=0.6,
             ax=ax,
         )
-        ax.scatter(*zip(*self.obstacles), color="black", label="Obstacles", s=15)
+        if self.obstacles:
+            ax.scatter(*zip(*self.obstacles), color="black", label="Obstacles", s=15)
         ax.scatter(*start, color="blue", label="Start", s=50)
         ax.scatter(*goal, color="green", label="Goal", s=50)
         plt.legend()
@@ -108,10 +117,10 @@ class AStarAlgorithm:
             plt.show()
             return [], []
 
-        # Dynamic visualization of explored nodes
-        explored = set()
-        for node in path:
-            if dynamic_visualization:
+        # Optional dynamic visualization of the explored nodes.
+        if dynamic_visualization:
+            explored = set()
+            for node in path:
                 explored.add(node)
                 ax.scatter(
                     node[0],
@@ -124,7 +133,7 @@ class AStarAlgorithm:
 
         rx, ry = zip(*path)
 
-        # Calculate metrics
+        # Calculate metrics.
         path_length = self.calculate_path_length(path)
         execution_time = time.time() - start_time
         steps = len(path)
@@ -188,6 +197,7 @@ def main():
     robot_radius = 2.0
 
     x_obs, y_obs = [], []
+    # Define boundary obstacles.
     for i in range(-10, 60):
         x_obs.append(i)
         y_obs.append(-10.0)
@@ -200,6 +210,7 @@ def main():
     for i in range(-10, 61):
         x_obs.append(-10.0)
         y_obs.append(i)
+    # Additional obstacles.
     for i in range(0, 40):
         for j in range(10, 20):
             x_obs.append(i)
