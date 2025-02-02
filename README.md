@@ -1,6 +1,61 @@
 # Advanced Path Planning Algorithms for Intelligent Mobile Robots
 
-This project is a collection of advanced path planning algorithms for grid-based navigation and autonomous systems. Each algorithm is implemented in its own folder with a dedicated README file explaining its details, usage, and performance metrics. This top-level README provides an overview of the entire project, its structure, installation instructions, usage guidelines, and licensing information.
+## Overview
+This repository contains implementations of various advanced path-planning algorithms used in autonomous mobile robots. These algorithms are widely applied in robotics, AI, and autonomous navigation systems. The repository includes implementations of A*, D*, Hybrid DQN-A*, RRT*, and Theta* algorithms, providing efficient solutions for navigation in dynamic and static environments.
+
+## Features
+- **A\* Algorithm**: Implements the classical A\* search algorithm and its bidirectional variant for optimal path planning.
+- **D\* Algorithm**: A dynamic path planning algorithm that adapts to changing environments.
+- **Hybrid DQN-A\***: A hybrid approach combining Deep Q-Network (DQN) with A\* for intelligent decision-making.
+- **RRT\* Algorithm**: Rapidly-exploring Random Tree (RRT\*) for sampling-based path planning.
+- **Theta\* Algorithm**: An optimized variant of A\* allowing any-angle path planning.
+
+## Directory Structure
+```plaintext
+Advanced_Path_Planning
+│── A_Star
+│   ├── README.md
+│   ├── a_star_algorithm.py
+│   ├── a_star_bidirectional_algorithm.py
+│
+│── D_Star
+│   ├── README.md
+│   ├── d_star.py
+│
+│── Hybrid_DQN_A_Star
+│   ├── README.md
+│   ├── hybrid_dqn_a_star_algorithm.py
+│
+│── RRT_Star
+│   ├── README.md
+│   ├── rrt_star_algorithm.py
+│
+│── Theta_Star
+│   ├── README.md
+│   ├── theta_star_algorithm.py
+│
+│── media
+│   ├── astar.gif
+│
+│── .gitignore
+│── LICENSE
+│── README.md
+│── requirements.txt
+```
+
+## Installation
+To run the algorithms, install the necessary dependencies:
+```sh
+pip install -r requirements.txt
+```
+
+## Usage
+Each algorithm can be executed independently. Example usage:
+```sh
+python A_Star/a_star_algorithm.py
+```
+
+Modify the scripts as needed to test different environments or configurations.
 
 ## Project Overview
 
@@ -21,20 +76,23 @@ The project contains several advanced path planning techniques, including:
 - **Advanced AI/ML (DQN-Based) Path Planning:**  
   An implementation that leverages deep reinforcement learning (using a Deep Q-Network) on the same grid structure to learn an optimal navigation policy through trial and error.
 
-## Project Structure
+## Visualization
+Pathfinding results can be visualized using the generated `.gif` files in the `media` directory.
 
+## Contributing
+Contributions are welcome! To contribute:
+1. Fork the repository
+2. Create a new branch (`git checkout -b feature-branch`)
+3. Commit changes (`git commit -m "Add new feature"`)
+4. Push to the branch (`git push origin feature-branch`)
+5. Open a Pull Request
 
+## License
+This project is licensed under the MIT License - see the LICENSE file for details.
 
+## Contact
+For inquiries or collaborations, reach out via GitHub Issues.
 
+---
+Happy Coding! 🚀
 
-
-## Requirements
-
-- Python 3.x
-- [networkx](https://networkx.org/)
-- [matplotlib](https://matplotlib.org/)
-
-Install the required libraries via pip:
-
-```bash
-pip install networkx matplotlib
