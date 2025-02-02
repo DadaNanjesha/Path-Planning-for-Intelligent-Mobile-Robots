@@ -84,6 +84,10 @@ An enhanced version of A\* that simultaneously searches from the start and goal,
 A dynamic path planning algorithm that efficiently updates the optimal path in response to changes in the environment.  
 <img src="media/dstar.gif" width="300" height="300" alt="D* Algorithm">
 
+### 🔹 **RRT\* Algorithm**
+A rapidly exploring random tree (RRT) is an algorithm designed to efficiently search nonconvex, high-dimensional spaces by randomly building a space-filling tree.  
+<img src="media/rrtstar.gif" width="300" height="300" alt="D* Algorithm">
+
 ### 🔹 **Theta\* Algorithm**
 An any-angle variant of A\* that uses line-of-sight checks to "shortcut" unnecessary nodes, producing smoother and more direct paths.  
 <img src="media/thetastar.gif" width="300" height="300" alt="Theta* Algorithm">

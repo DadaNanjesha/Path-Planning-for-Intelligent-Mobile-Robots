@@ -374,7 +374,7 @@ def visualize_path(env, path):
     # Dynamically plot each point in the path with a 0.5 second pause.
     for node in path:
         ax.scatter(node[0], node[1], color="red", s=20)
-        plt.pause(0.1)
+        plt.pause(0.001)
 
     # After plotting individual points, draw the continuous red line.
     rx, ry = zip(*path)

@@ -70,7 +70,7 @@ class DStarAlgorithm:
         ]
 
     def d_star_planning(
-        self, sx, sy, gx, gy, dynamic_visualization=False, pause_time=0.2
+        self, sx, sy, gx, gy, dynamic_visualization=False, pause_time=0.0001
     ):
         """
         Perform D* path planning with dynamic visualization.
@@ -219,7 +219,7 @@ def main():
 
     # Run pathfinding algorithm with visualization
     rx, ry = d_star.d_star_planning(
-        sx, sy, gx, gy, dynamic_visualization=True, pause_time=0.2
+        sx, sy, gx, gy, dynamic_visualization=True, pause_time=0.001
     )
 
 
