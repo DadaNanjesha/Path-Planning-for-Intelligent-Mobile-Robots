@@ -127,7 +127,7 @@ Both algorithms are designed for a **2D grid environment** with obstacles. The s
 
 - **Path Reconstruction:**
 
-  $\text{final\_path} = \text{retrace}(start, meeting\_node)+\text{retrace}(goal, meeting\_node)[1:]$
+  $$f_\text{final\_path} = \text{retrace}(start, meeting\_node)+\text{retrace}(goal, meeting\_node)[1:]$$
 
 ---
 
