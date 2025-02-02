@@ -44,7 +44,7 @@ Both algorithms are designed for a **2D grid environment** with obstacles. The s
 
 - **Cost Model:**  
   - **Horizontal/Vertical:** Cost = 1  
-  - **Diagonal:**  $ Cost =\sqrt{2} $
+  - **Diagonal:**  $Cost =\sqrt{2}$
 
 ### A* Bidirectional Algorithm
 
