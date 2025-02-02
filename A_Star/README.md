@@ -148,13 +148,13 @@ Both implementations feature dynamic visualization using `matplotlib`:
 
 Watch the A* algorithm in action:
 
-<img src="media/astar.gif" alt="A* Algorithm" width="300" height="300">
+<img src="https://github.com/DadaNanjesha/Path-Planning-for-Intelligent-Mobile-Robots/blob/main/media/astar.gif" alt="A* Algorithm" width="500" height="500">
 
 ### A* Bidirectional Algorithm
 
 See the enhanced bidirectional search:
 
-<img src="media/astar_bidirectional.gif" alt="A* Bidirectional Algorithm" width="300" height="300">
+<img src="https://github.com/DadaNanjesha/Path-Planning-for-Intelligent-Mobile-Robots/blob/main/media/astar_bidirectional.gif" alt="A* Bidirectional Algorithm" width="500" height="500">
 ---
 
 ## 🏁 Conclusion
