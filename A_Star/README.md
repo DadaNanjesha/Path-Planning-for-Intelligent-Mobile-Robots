@@ -36,15 +36,15 @@ Both algorithms are designed for a **2D grid environment** with obstacles. The s
 - **Heuristic:**  
   Uses the **Euclidean distance**:
   
-  \[
+  $$
   h(n) = \sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}
-  \]
+  $$
   
   where \( (x_1, y_1) \) is the current node’s position and \( (x_2, y_2) \) is the goal position.
 
 - **Cost Model:**  
   - **Horizontal/Vertical:** Cost = 1  
-  - **Diagonal:** Cost = \( \sqrt{2} \)
+  - **Diagonal:**  $ Cost =\sqrt{2} $
 
 ### A* Bidirectional Algorithm
 
@@ -73,10 +73,10 @@ Both algorithms are designed for a **2D grid environment** with obstacles. The s
     - **Up:** `(0, 1)`
     - **Left:** `(-1, 0)`
     - **Down:** `(0, -1)`
-    - **Diagonals:** `(±1, ±1)` with a cost of \( \sqrt{2} \).
+    - **Diagonals:** `(±1, ±1)` with a cost of $ \sqrt{2} $.
 
 - **A* Search:**  
-  - Computes the optimal path using a heuristic to balance actual path cost and the estimated cost to the goal.
+  - Computes the optimal path using a heuristic to balance the actual path cost and the estimated cost to the goal.
 
 - **Bidirectional A* Search:**  
   - Executes two simultaneous A* searches from both endpoints to reduce the number of nodes expanded.
@@ -106,9 +106,9 @@ Both algorithms are designed for a **2D grid environment** with obstacles. The s
 
 - **Cost Function:**
 
-  \[
+  $$
   f(n) = g(n) + h(n)
-  \]
+  $$
 
   where:
   - \( g(n) \) is the cost from the start node to the current node.
@@ -125,18 +125,19 @@ Both algorithms are designed for a **2D grid environment** with obstacles. The s
 
 - **Heuristic Functions:**
 
-  \[
+  $$
   f_{\text{start}}(n) = g_{\text{start}}(n) + h_{\text{start}}(n)
-  \]
-  \[
+  $$
+  
+  $$
   f_{\text{goal}}(n) = g_{\text{goal}}(n) + h_{\text{goal}}(n)
-  \]
+  $$
 
 - **Path Reconstruction:**
 
-  \[
+  $$
   \text{final\_path} = \text{retrace}(start, meeting\_node) + \text{retrace}(goal, meeting\_node)[1:]
-  \]
+  $$
 
 ---
 
@@ -156,13 +157,13 @@ Both implementations feature dynamic visualization using `matplotlib`:
 
 Watch the A* algorithm in action:
 
-![A* Algorithm](path_to_your_A_star_gif.gif)
+![A* Algorithm](/media/astar.gif)
 
 ### A* Bidirectional Algorithm
 
 See the enhanced bidirectional search:
 
-![A* Bidirectional Algorithm](path_to_your_bidirectional_A_star_gif.gif)
+![A* Bidirectional Algorithm](/media/astar_bidirectional.gif)
 
 ---
 
@@ -176,4 +177,3 @@ Both implementations feature an 8-connected motion model, dynamic visualizations
 
 ---
 
-Feel free to explore the code, contribute, and adapt the algorithms to suit your specific needs. Happy coding!  
