@@ -1,16 +1,24 @@
-# Advanced Path Planning Algorithms for Intelligent Mobile Robots
+# 🚀 Advanced Path Planning Algorithms for Intelligent Mobile Robots
 
-## Overview
-This repository contains implementations of various advanced path-planning algorithms used in autonomous mobile robots. These algorithms are widely applied in robotics, AI, and autonomous navigation systems. The repository includes implementations of A*, D*, Hybrid DQN-A*, RRT*, and Theta* algorithms, providing efficient solutions for navigation in dynamic and static environments.
+## 📌 Overview
+This repository contains implementations of various **advanced path-planning algorithms** used in autonomous mobile robots. These algorithms are widely applied in **robotics, AI, and autonomous navigation systems**. 
 
-## Features
-- **A\* Algorithm**: Implements the classical A\* search algorithm and its bidirectional variant for optimal path planning.
-- **D\* Algorithm**: A dynamic path planning algorithm that adapts to changing environments.
-- **Hybrid DQN-A\***: A hybrid approach combining Deep Q-Network (DQN) with A\* for intelligent decision-making.
-- **RRT\* Algorithm**: Rapidly-exploring Random Tree (RRT\*) for sampling-based path planning.
-- **Theta\* Algorithm**: An optimized variant of A\* allowing any-angle path planning.
+The repository includes implementations of:
+- **A\***, **D\***, **Hybrid DQN-A\***, **RRT\***, and **Theta\*** algorithms.
+- Efficient solutions for **navigation in dynamic and static environments**.
 
-## Directory Structure
+---
+
+## ✨ Features
+✔ **A\* Algorithm** - Implements the classical A\* search and bidirectional variant for optimal path planning.  
+✔ **D\* Algorithm** - A dynamic path planning algorithm that adapts to changing environments.  
+✔ **Hybrid DQN-A\*** - A hybrid approach combining Deep Q-Network (DQN) with A\* for intelligent decision-making.  
+✔ **RRT\* Algorithm** - Rapidly-exploring Random Tree (RRT\*) for sampling-based path planning.  
+✔ **Theta\* Algorithm** - An optimized variant of A\* allowing any-angle path planning.  
+
+---
+
+## 📂 Directory Structure
 ```plaintext
 Advanced_Path_Planning
 │── A_Star
@@ -43,43 +51,55 @@ Advanced_Path_Planning
 │── requirements.txt
 ```
 
-## Installation
+---
+
+## ⚙️ Installation
 To run the algorithms, install the necessary dependencies:
 ```sh
 pip install -r requirements.txt
 ```
 
-## Usage
+---
+
+## 🚀 Usage
 Each algorithm can be executed independently. Example usage:
 ```sh
 python A_Star/a_star_algorithm.py
 ```
-
 Modify the scripts as needed to test different environments or configurations.
 
-## Project Overview
+---
 
+## 📊 Project Overview
 The project contains several advanced path planning techniques, including:
+### 🔹 **A\* Algorithm**
+A classic grid-based path planning method that computes the optimal path using an 8-connected graph and a Euclidean distance heuristic.  
+<img src="media/astar.gif" width="300" height="300" alt="A* Algorithm">
 
-- **A\* Algorithm:**  
-  A classic grid-based path planning method that computes the optimal path using an 8-connected graph and a Euclidean distance heuristic.
-  <img src="media/astar.gif" width="300" height="300" alt="A* Algorithm">
-- **Bidirectional A\* Algorithm:**  
-  An enhanced version of A\* that simultaneously searches from the start and goal, potentially reducing the search time.
+### 🔹 **Bidirectional A\***
+An enhanced version of A\* that simultaneously searches from the start and goal, potentially reducing the search time.  
+<img src="media/astar_bidirectional.gif" width="300" height="300" alt="Bidirectional A* Algorithm">
 
-- **D\* Algorithm:**  
-  A dynamic path planning algorithm that efficiently updates the optimal path in response to changes in the environment.
+### 🔹 **D\* Algorithm**
+A dynamic path planning algorithm that efficiently updates the optimal path in response to changes in the environment.  
+<img src="media/dstar.gif" width="300" height="300" alt="D* Algorithm">
 
-- **Theta\* Algorithm:**  
-  An any-angle variant of A\* that uses line-of-sight checks to "shortcut" unnecessary nodes, producing smoother and more direct paths with fewer turns. This implementation includes dynamic visualization with step-by-step plotting and draws a continuous red line for the final path.
+### 🔹 **Theta\* Algorithm**
+An any-angle variant of A\* that uses line-of-sight checks to "shortcut" unnecessary nodes, producing smoother and more direct paths.  
+<img src="media/thetastar.gif" width="300" height="300" alt="Theta* Algorithm">
 
-- **Advanced AI/ML (DQN-Based) Path Planning:**  
-  An implementation that leverages deep reinforcement learning (using a Deep Q-Network) on the same grid structure to learn an optimal navigation policy through trial and error.
+### 🔹 **Advanced AI/ML (DQN-Based) Path Planning**
+An implementation leveraging deep reinforcement learning (DQN) to learn an optimal navigation policy.  
+<img src="media/dqn_astar.gif" width="300" height="300" alt="DQN-A* Algorithm">
 
-## Visualization
+---
+
+## 🎥 Visualization
 Pathfinding results can be visualized using the generated `.gif` files in the `media` directory.
 
-## Contributing
+---
+
+## 🤝 Contributing
 Contributions are welcome! To contribute:
 1. Fork the repository
 2. Create a new branch (`git checkout -b feature-branch`)
@@ -87,12 +107,17 @@ Contributions are welcome! To contribute:
 4. Push to the branch (`git push origin feature-branch`)
 5. Open a Pull Request
 
-## License
-This project is licensed under the MIT License - see the LICENSE file for details.
+---
 
-## Contact
-For inquiries or collaborations, reach out via GitHub Issues.
+## 📜 License
+This project is licensed under the **MIT License** - see the LICENSE file for details.
 
 ---
-Happy Coding! 🚀
+
+## 📬 Contact
+For inquiries or collaborations, reach out via **GitHub Issues**.
+
+---
+
+🎉 **Happy Coding!** 🚀
 
