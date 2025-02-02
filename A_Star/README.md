@@ -148,14 +148,13 @@ Both implementations feature dynamic visualization using `matplotlib`:
 
 Watch the A* algorithm in action:
 
-![A* Algorithm](/media/astar.gif)
+<img src="media/astar.gif" alt="A* Algorithm" width="300" height="300">
 
 ### A* Bidirectional Algorithm
 
 See the enhanced bidirectional search:
 
-![A* Bidirectional Algorithm](/media/astar_bidirectional.gif)
-
+<img src="media/astar_bidirectional.gif" alt="A* Bidirectional Algorithm" width="300" height="300">
 ---
 
 ## 🏁 Conclusion
