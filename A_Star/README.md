@@ -1,16 +1,33 @@
+# A* and A* Bidirectional  Path Planning Algorithms
 
-## A* Algorithm
-The A* algorithm is a popular pathfinding and graph traversal algorithm used in many fields of computer science due to its performance and accuracy. It is widely used in applications such as robotics, video games, and geographic information systems (GIS).
+This repository contains two implementations of the A* path planning algorithm for grid-based navigation with obstacles. The repository includes:
 
-### How it works
-A* uses a best-first search and finds the least-cost path from a given start node to a given goal node. It uses a heuristic to estimate the cost to reach the goal from the current node, which helps in making the algorithm more efficient.
+- **A\* Algorithm:** A standard A* implementation that computes the optimal path on a grid using an 8-connected motion model.
+- **A\* Bidirectional Algorithm:** An enhanced version that runs A* search simultaneously from both the start and goal nodes to potentially reduce search time.
 
-### Key Features
-- **Optimality**: A* is guaranteed to find the least-cost path if the heuristic is admissible (never overestimates the cost).
-- **Completeness**: A* is complete, meaning it will always find a solution if one exists.
-- **Heuristic**: The heuristic function helps in guiding the search towards the goal more efficiently.
+Both implementations share a similar graph structure and visualization framework.
 
-### Visualization
-Below is a visualization of the A* algorithm in action:
+## Overview
 
-![A* Algorithm](/media/astar.gif)
+The algorithms are designed for a 2D grid environment with obstacles. A graph is constructed by discretizing the space into nodes over specified boundaries. Obstacles are incorporated by removing nodes that lie within a given clearance radius. The motion model supports eight directional movements (up, down, left, right, and diagonals), with diagonal moves incurring a cost of √2.
+
+## Features
+
+- **Graph Construction:**  
+  Generates a grid graph based on defined boundaries and resolution. Nodes that fall within the robot's clearance of an obstacle are removed.
+
+- **8-Connected Motion Model:**  
+  Both algorithms use eight-directional movement for effective path exploration.
+
+- **A\* Search:**  
+  Uses a heuristic (Euclidean distance) to compute the optimal path from the start to the goal.
+
+- **Bidirectional A\* Search:**  
+  Expands the search simultaneously from the start and goal nodes, which can improve efficiency in certain scenarios.
+
+- **Dynamic Visualization:**  
+  Uses `matplotlib` to visualize the grid, obstacles, start and goal positions, and the computed path. Both implementations offer dynamic updates during the search process.
+
+- **Performance Metrics:**  
+  After executing, the algorithms report metrics such as execution time, path length, number of steps, and direction changes.
+
