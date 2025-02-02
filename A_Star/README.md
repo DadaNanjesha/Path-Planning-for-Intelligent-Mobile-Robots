@@ -36,9 +36,7 @@ Both algorithms are designed for a **2D grid environment** with obstacles. The s
 - **Heuristic:**  
   Uses the **Euclidean distance**:
   
-  $$
-  h(n) = \sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}
-  $$
+  $$h(n) = \sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}$$
   
   where \( (x_1, y_1) \) is the current node’s position and \( (x_2, y_2) \) is the goal position.
 
@@ -129,7 +127,7 @@ Both algorithms are designed for a **2D grid environment** with obstacles. The s
 
 - **Path Reconstruction:**
 
-  $$\text{final\_path} = \text{retrace}(start, meeting\_node) + \text{retrace}(goal, meeting\_node)[1:]$$
+  $\text{final\_path} = \text{retrace}(start, meeting\_node)+\text{retrace}(goal, meeting\_node)[1:]$
 
 ---
 
