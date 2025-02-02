@@ -108,7 +108,7 @@ class DStarAlgorithm:
         # Perform D* Search
         try:
             path, explored_nodes = self.d_star_search(start, goal)
-            print("Final Path Nodes:", path)
+            print("Final Path Nodes:")
         except nx.NetworkXNoPath:
             print("No path found!")
             plt.title("No Path Found")
