@@ -73,7 +73,7 @@ Both algorithms are designed for a **2D grid environment** with obstacles. The s
     - **Up:** `(0, 1)`
     - **Left:** `(-1, 0)`
     - **Down:** `(0, -1)`
-    - **Diagonals:** `(±1, ±1)` with a cost of $ \sqrt{2} $.
+    - **Diagonals:** `(±1, ±1)` with a cost of $\sqrt{2}$.
 
 - **A* Search:**  
   - Computes the optimal path using a heuristic to balance the actual path cost and the estimated cost to the goal.
@@ -106,9 +106,7 @@ Both algorithms are designed for a **2D grid environment** with obstacles. The s
 
 - **Cost Function:**
 
-  $$
-  f(n) = g(n) + h(n)
-  $$
+  $$f(n) = g(n) + h(n)$$
 
   where:
   - \( g(n) \) is the cost from the start node to the current node.
@@ -125,19 +123,13 @@ Both algorithms are designed for a **2D grid environment** with obstacles. The s
 
 - **Heuristic Functions:**
 
-  $$
-  f_{\text{start}}(n) = g_{\text{start}}(n) + h_{\text{start}}(n)
-  $$
+  $$f_{\text{start}}(n) = g_{\text{start}}(n) + h_{\text{start}}(n)$$
   
-  $$
-  f_{\text{goal}}(n) = g_{\text{goal}}(n) + h_{\text{goal}}(n)
-  $$
+  $$f_{\text{goal}}(n) = g_{\text{goal}}(n) + h_{\text{goal}}(n)$$
 
 - **Path Reconstruction:**
 
-  $$
-  \text{final\_path} = \text{retrace}(start, meeting\_node) + \text{retrace}(goal, meeting\_node)[1:]
-  $$
+  $$\text{final\_path} = \text{retrace}(start, meeting\_node) + \text{retrace}(goal, meeting\_node)[1:]$$
 
 ---
 
