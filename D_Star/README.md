@@ -35,3 +35,9 @@ The algorithm works as follows:
   Real-time visualization shows the exploration and final path. Metrics such as execution time, path length, and number of steps are printed and displayed on the plot.
 
 
+- **Performance Metrics:**  
+  Reports:
+  - **Execution Time:** Total time taken for evaluation.
+  - **Path Length:** Total Euclidean distance of the final path.
+  - **Steps Taken:** Number of nodes (steps) in the final path.
+  - **Direction Changes:** Number of times the path changes direction.

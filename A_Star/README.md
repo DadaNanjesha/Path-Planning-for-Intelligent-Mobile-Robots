@@ -29,5 +29,8 @@ The algorithms are designed for a 2D grid environment with obstacles. A graph is
   Uses `matplotlib` to visualize the grid, obstacles, start and goal positions, and the computed path. Both implementations offer dynamic updates during the search process.
 
 - **Performance Metrics:**  
-  After executing, the algorithms report metrics such as execution time, path length, number of steps, and direction changes.
-
+  Reports:
+  - **Execution Time:** Total time taken for evaluation.
+  - **Path Length:** Total Euclidean distance of the final path.
+  - **Steps Taken:** Number of nodes (steps) in the final path.
+  - **Direction Changes:** Number of times the path changes direction.

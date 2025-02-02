@@ -109,7 +109,7 @@ class BidirectionalAStarAlgorithm:
         # Perform Bidirectional Search
         try:
             path, explored_start, explored_goal = self.bidirectional_search(start, goal)
-            print("Final Path Nodes:", path)
+            print("Final Path Nodes:")
         except nx.NetworkXNoPath:
             print("No path found!")
             plt.title("No Path Found")
