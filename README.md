@@ -44,11 +44,26 @@ Advanced_Path_Planning
 │
 │── media
 │   ├── astar.gif
+│   ├── astar_bidirectional.gif
+│   ├── dstar.gif
+│   ├── dqn_astar.gif
+│   ├── rrtstar.gif
+│   ├── thetastar.gif
+│
+│── test
+│   ├── test_astar.py
+│   ├── test_dstar.py
+│   ├── test_hybrid_dqn_a_star.py
+│   ├── test_rrt_star.py
+│   ├── test_theta_star.py
 │
 │── .gitignore
 │── LICENSE
 │── README.md
 │── requirements.txt
+│── setup.py
+│── .github
+
 ```
 
 ---
@@ -57,6 +72,8 @@ Advanced_Path_Planning
 To run the algorithms, install the necessary dependencies:
 ```sh
 pip install -r requirements.txt
+pip install -e .
+
 ```
 
 ---
@@ -65,6 +82,8 @@ pip install -r requirements.txt
 Each algorithm can be executed independently. Example usage:
 ```sh
 python A_Star/a_star_algorithm.py
+            or
+pytest -v --verbose
 ```
 Modify the scripts as needed to test different environments or configurations.
 
