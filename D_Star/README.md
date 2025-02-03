@@ -1,43 +1,70 @@
-# D* Path Planning Algorithm
+# 🚀 D* Path Planning Algorithm
 
-A grid-based D* (D-Star) path planning algorithm in Python. The algorithm constructs a graph representation of the configuration space, incorporates obstacles by removing grid nodes within a specified clearance radius, and uses an A* search heuristic (via NetworkX) to compute an optimal path from a start to a goal node. Dynamic visualization with matplotlib illustrates both the exploration process and the final computed path.
+A **grid-based D* (D-Star) path planning algorithm** implemented in Python. This algorithm builds a **graph representation** of the environment, removes obstacle-affected nodes, and finds an optimal path using **A* heuristics with NetworkX**. The visualization dynamically illustrates the search and final path.
 
-## Overview
+---
 
-The algorithm works as follows:
-- **Graph Construction:**  
-  A grid graph is built with nodes corresponding to discrete positions in the environment. Obstacles are integrated by removing nodes that lie within a given radius of any obstacle coordinate.
-  
-- **Motion Model:**  
-  An 8-connected motion model is used, allowing movement in the four cardinal directions as well as the four diagonal directions, each with appropriate cost (diagonals incur a cost of √2).
+## 📌 Overview
+🔹 **Graph Construction:** Builds a grid graph and removes obstacle-influenced nodes.  
+🔹 **Motion Model:** Uses an **8-connected** motion model (cardinal & diagonal moves).  
+🔹 **D* Search:** Implements A* heuristics for optimized path computation.  
+🔹 **Dynamic Visualization:** Real-time search visualization with **matplotlib**.  
 
-- **D* Search:**  
-  A variant of the D* algorithm is implemented using NetworkX’s A* search. The heuristic function is based on Euclidean distance.
+---
 
-- **Dynamic Visualization:**  
-  The algorithm visualizes the exploration process by displaying explored nodes in real time and finally plotting the optimal path along with performance metrics.
+## ✨ Features
+✔ **Grid-Based Representation** – Constructs a graph based on x/y coordinates.  
+✔ **Obstacle Handling** – Removes nodes within a clearance radius.  
+✔ **8-Connected Motion Model** – Supports diagonal and straight-line movements.  
+✔ **D* Search Algorithm** – Uses Euclidean heuristics for optimal path planning.  
+✔ **Real-Time Visualization** – Displays search progress dynamically.  
+✔ **Performance Metrics** – Reports execution time, path length, steps, and turns.  
 
-## Features
+---
 
-- **Grid-Based Graph Representation:**  
-  Constructs a grid graph based on given x and y coordinates, with a configurable resolution.
-  
-- **Obstacle Integration:**  
-  Obstacles are defined by lists of x and y coordinates. Nodes within the robot’s clearance (defined by a radius) are removed from the graph.
-  
-- **8-Connected Motion:**  
-  The motion model supports 8 directions (up, down, left, right, and diagonals), with appropriate cost calculation.
+## 📊 Algorithm Breakdown
 
-- **D* Path Planning:**  
-  Uses an A* search approach with a Euclidean distance heuristic to compute the optimal path in the modified grid.
+### 🏗 **1. Graph Construction (`build_graph`)**
+🔹 Creates a **grid graph** with obstacles removed.  
+🔹 Ensures no paths cross obstacles by removing clearance-affected nodes.  
 
-- **Dynamic Visualization & Metrics:**  
-  Real-time visualization shows the exploration and final path. Metrics such as execution time, path length, and number of steps are printed and displayed on the plot.
+### 🎯 **2. Motion Model (`motion_mod`)**
+✔ **Cardinal Directions:** Up, Down, Left, Right (cost = 1)  
+✔ **Diagonal Movements:** Top-Left, Top-Right, Bottom-Left, Bottom-Right (cost = √2)  
 
+### 🔍 **3. Path Planning (`d_star_planning`)**
+✔ Performs **D* search** dynamically, showing the real-time search process.  
+✔ Uses `d_star_search` function for A* heuristic calculations.  
 
-- **Performance Metrics:**  
-  Reports:
-  - **Execution Time:** Total time taken for evaluation.
-  - **Path Length:** Total Euclidean distance of the final path.
-  - **Steps Taken:** Number of nodes (steps) in the final path.
-  - **Direction Changes:** Number of times the path changes direction.
+### 🔄 **4. Heuristic Calculation (`calc_heuristic`)**
+Computes **Euclidean distance**:
+```math
+h(n) = \sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}
+```
+
+### 📏 **5. Path Length Calculation (`calculate_path_length`)**
+Total path distance:
+```math
+\sum_{i=1}^{n-1} \sqrt{(x_{i+1} - x_i)^2 + (y_{i+1} - y_i)^2}
+```
+
+---
+
+## 📊 Performance Metrics
+✔ **Execution Time:** Total time taken for evaluation.  
+✔ **Path Length:** Total Euclidean distance of the final path.  
+✔ **Steps Taken:** Number of nodes (steps) in the final path.  
+✔ **Direction Changes:** Number of times the path changes direction.  
+
+---
+
+## 🎥 Dynamic Visualization
+The **matplotlib-based visualization** dynamically updates as the search progresses:
+✔ **Explored nodes** appear in real-time.  
+✔ **Final path** is plotted in red.  
+✔ **Obstacles & environment** remain static.  
+
+### 📌 D* Path Planning GIF
+![D* Algorithm](path_to_your_D_star_gif.gif)
+
+---
