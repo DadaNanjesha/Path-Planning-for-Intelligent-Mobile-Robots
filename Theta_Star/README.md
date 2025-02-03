@@ -1,74 +1,88 @@
-# Advanced Theta* Path Planning with Dynamic Visualization
+# 🚀 Advanced Theta* Path Planning with Dynamic Visualization
 
-Advanced Theta* (Theta Star) path planning algorithm for grid-based navigation in the presence of obstacles. Theta* is an any-angle variant of A* that leverages line-of-sight checks to produce smoother, more direct paths with fewer intermediate nodes and direction changes. The code is designed to be efficient and optimized in several ways and includes dynamic visualization to help users see the path planning process step-by-step.
+## 🌟 Overview
+The **Theta*** (Theta Star) path planning algorithm is an advanced variant of A* that integrates **line-of-sight checks** to generate **smoother, more direct** paths in a grid-based environment. Unlike A*, Theta* allows diagonal and non-grid-constrained movement, reducing unnecessary turns and improving efficiency.
 
-## Overview
+🔹 **Smooth and direct paths** with minimal nodes and direction changes.  
+🔹 **Optimized grid representation** for efficient obstacle handling.  
+🔹 **Dynamic visualization** to track the step-by-step search process.  
+🔹 **Efficient priority queue (heapq) for fast node expansion.**  
 
-The algorithm constructs a grid graph from a given set of obstacle coordinates, removes nodes that are too close to obstacles, and connects the remaining nodes using an 8-connected motion model (i.e., it allows movement in the four cardinal and four diagonal directions). Theta* search is then applied to compute a path from the start to the goal using a priority queue for efficient node expansion and line-of-sight checking to "shortcut" unnecessary intermediate nodes.
+---
 
-## Features
+## 🚀 Features
+### 📌 **Grid Graph Construction**
+✔ **8-connected motion model** (Cardinal + Diagonal movements).  
+✔ **Obstacle clearance optimization** to avoid unnecessary calculations.  
+✔ **Fast graph generation** with bounding box obstacle processing.  
 
-- **Grid Graph Construction:**
-  - Generates a complete grid of nodes based on specified boundaries and resolution.
-  - Efficiently removes nodes that are within a specified clearance (robot radius) of obstacles by iterating over a minimal bounding box around each obstacle.
-  - Connects the remaining nodes using an 8-connected motion model, which includes both cardinal (cost 1) and diagonal (cost √2) moves.
+### 🔍 **Theta* Search Algorithm**
+✔ **Priority queue (heapq) for fast node expansion.**  
+✔ **Line-of-sight shortcutting** to reduce path length.  
+✔ **Reduced direction changes** for more natural navigation.  
 
-- **Theta* Search Algorithm:**
-  - Uses a priority queue (via Python's `heapq`) to efficiently expand nodes based on a combined cost and heuristic value.
-  - Integrates line-of-sight checks between nodes. If the parent of the current node has a clear view to a neighbor, the algorithm “shortcuts” the path, resulting in smoother and more direct paths.
-  - Computes key metrics such as execution time, total path length, number of steps taken, and the number of direction changes.
+### 🎥 **Dynamic Visualization**
+✔ **Step-by-step path planning animation.**  
+✔ **Final path rendering with direct comparison.**  
+✔ **Adjustable delay for better observation.**  
 
-- **Dynamic Visualization:**
-  - Dynamically plots each node in the computed path with a pause (0.5 seconds per node) to allow step-by-step observation.
-  - After plotting individual nodes, a continuous red line is drawn to represent the final computed path.
-  - If the straight-line (direct) connection between the start and goal is unobstructed, a red dashed line is also drawn for visual comparison.
+### 📊 **Performance Metrics**
+✔ **Execution Time:** Total processing time for path planning.  
+✔ **Path Length:** Total distance from start to goal.  
+✔ **Steps Taken:** Number of nodes used in the final path.  
+✔ **Direction Changes:** Measures smoothness of movement.  
 
-## Optimization Details
+---
 
-- **Precomputation:**  
-  The squared radius (for obstacle clearance) is precomputed to avoid redundant square root calculations when checking if a node is too close to an obstacle.
+## 📐 Mathematical Formulas
+### 🔹 **Euclidean Distance (Heuristic Function)**
+```math
+\text{distance}(n_1, n_2) = \sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}
+```
 
-- **Efficient Obstacle Processing:**  
-  Instead of checking every grid node against every obstacle, the algorithm iterates only over a bounding box around each obstacle coordinate. This minimizes the number of checks and speeds up the graph construction.
+### 🔹 **Cost Calculation Based on Movement Type**
+```math
+\text{cost}(a, b) = 
+\begin{cases} 
+1 & \text{if moving in cardinal directions} \\
+\sqrt{2} & \text{if moving diagonally}
+\end{cases}
+```
 
-- **Priority Queue with Heapq:**  
-  The open set in Theta* is managed using a heap-based priority queue, which ensures that the node with the lowest estimated total cost (current cost + heuristic) is always expanded next.
+### 🔹 **Line-of-Sight Check**
+Determines if two nodes can be directly connected without obstruction.
+```math
+\text{LOS}(a, b) = \begin{cases} 
+\text{True} & \text{if no obstacles between } a \text{ and } b \\
+\text{False} & \text{otherwise}
+\end{cases}
+```
 
-- **Line-of-Sight Checking:**  
-  By using line-of-sight checks, Theta* can bypass unnecessary nodes and directly connect nodes that have a clear path between them. This not only produces a smoother path but also reduces the total number of nodes in the final path, leading to fewer direction changes and a shorter overall distance.
+### 🔹 **Path Reconstruction**
+Backtracks from the goal to extract the optimal path.
 
-- **Dynamic Visualization Control:**  
-  The use of `plt.pause(0.5)` during dynamic visualization allows users to slow down the display of each node, making it easier to observe and debug the planning process.
+---
 
-## Code Explanation
+## 🛠️ Code Structure
+### 🏗 **Graph Construction and Obstacle Handling**
+✔ **`build_graph()`** - Generates the grid and removes nodes near obstacles.  
+✔ **`motion_mod()`** - Defines valid movement directions and their costs.  
 
-### Graph Construction and Obstacle Handling
+### 🔄 **Theta* Search Algorithm**
+✔ **`theta_star_search()`** - Expands nodes using a priority queue.  
+✔ **`line_of_sight()`** - Checks if direct paths can be used.  
+✔ **`reconstruct_path()`** - Backtracks through `came_from` to generate the optimal path.  
 
-- **`build_graph`:**  
-  The grid is generated by iterating over the specified x and y ranges. Obstacle nodes are removed by computing a bounding box around each obstacle and checking if each node in that box lies within the clearance radius. This method minimizes the computational load compared to checking every grid node.
+### 📊 **Performance Calculation**
+✔ **`calculate_path_length()`** - Computes total travel distance.  
+✔ **`calculate_direction_changes()`** - Measures path smoothness.  
 
-- **`motion_mod`:**  
-  Returns the list of allowed moves and their costs (1 for cardinal moves and √2 for diagonal moves), ensuring that the graph is connected in all eight directions.
+### 🎥 **Visualization and Path Rendering**
+✔ **`visualize_path()`** - Displays step-by-step execution.  
+✔ **`draw_final_path()`** - Renders the computed path in red.  
+✔ **`direct_connection_check()`** - Verifies if a direct route was possible.  
 
-### Theta* Search Algorithm
+---
 
-- **`theta_star_search`:**  
-  Uses a priority queue to expand nodes based on the lowest cost-to-go (combining current path cost and a Euclidean distance heuristic).  
-  The algorithm uses a line-of-sight check to see if the parent of the current node can directly connect to a neighbor, which helps “shortcut” the path and reduce unnecessary detours.
-
-### Metrics Calculation
-
-- **`calculate_path_length`:**  
-  Computes the total Euclidean distance of the computed path.
-- **`calculate_direction_changes`:**  
-  Counts how many times the movement direction changes along the path, which is an important metric for path smoothness.
-
-### Visualization
-
-- **Dynamic Visualization:**  
-  When enabled, each node in the computed path is plotted with a 0.5-second pause to provide a clear step-by-step view.
-- **Final Path Drawing:**  
-  After dynamically plotting nodes, a continuous red line is drawn to represent the final computed path.
-- **Direct Connection Check:**  
-  Before drawing a red dashed line directly from start to goal, the algorithm verifies using the `line_of_sight` function that the straight-line connection is not blocked by obstacles.
+🎯 **Theta* offers smarter, optimized pathfinding with real-time visualization!** 🚀
 
