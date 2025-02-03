@@ -15,10 +15,10 @@ class ThetaStarAlgorithm:
         """
         self.resol = resol
         self.radius = radius
-        self.graph = nx.Graph()
-        self.obstacles = set()
-        self.motion = self.motion_mod()
-        self.build_graph(x_obs, y_obs)
+        self.graph = nx.Graph()  # Create a graph to represent the grid
+        self.obstacles = set()  # Set to store obstacles
+        self.motion = self.motion_mod()  # Define motion model
+        self.build_graph(x_obs, y_obs)  # Build the grid graph
 
     def build_graph(self, x_obs, y_obs):
         """
@@ -27,12 +27,12 @@ class ThetaStarAlgorithm:
           - Remove nodes within the clearance (radius) of any obstacle.
           - Connect remaining nodes using an 8-connected motion model.
         """
-        self.x_min = round(min(x_obs))
-        self.y_min = round(min(y_obs))
-        self.max_x = round(max(x_obs))
-        self.max_y = round(max(y_obs))
+        self.x_min = round(min(x_obs))  # Get minimum x-coordinate of obstacles
+        self.y_min = round(min(y_obs))  # Get minimum y-coordinate of obstacles
+        self.max_x = round(max(x_obs))  # Get maximum x-coordinate of obstacles
+        self.max_y = round(max(y_obs))  # Get maximum y-coordinate of obstacles
 
-        # Create grid nodes.
+        # Create grid nodes for each point (x, y) within the boundaries of obstacles
         nodes = [
             (x, y)
             for x in range(self.x_min, self.max_x + 1)
@@ -40,10 +40,10 @@ class ThetaStarAlgorithm:
         ]
         self.graph.add_nodes_from(nodes)
 
-        # Precompute squared radius.
+        # Precompute squared radius to avoid redundant square root calculations
         r2 = self.radius**2
 
-        # Remove nodes that are within the clearance of an obstacle.
+        # Remove nodes that are too close to any obstacles (based on the robot's clearance)
         for ox, oy in zip(x_obs, y_obs):
             min_x_obs = max(self.x_min, int(math.floor(ox - self.radius)))
             max_x_obs = min(self.max_x, int(math.ceil(ox + self.radius)))
@@ -54,10 +54,10 @@ class ThetaStarAlgorithm:
                     if (ox - x) ** 2 + (oy - y) ** 2 <= r2:
                         node = (x, y)
                         if node in self.graph:
-                            self.obstacles.add(node)
-                            self.graph.remove_node(node)
+                            self.obstacles.add(node)  # Add to obstacle set
+                            self.graph.remove_node(node)  # Remove the obstacle node
 
-        # Connect remaining nodes using allowed motions.
+        # Connect remaining nodes using allowed motions
         remaining_nodes = list(self.graph.nodes)
         for node in remaining_nodes:
             for dx, dy, cost in self.motion:
@@ -69,16 +69,17 @@ class ThetaStarAlgorithm:
     def motion_mod():
         """
         Define 8-connected motion vectors (dx, dy) and their cost.
+        The motion model allows for vertical, horizontal, and diagonal moves.
         """
         return [
-            (1, 0, 1),
-            (0, 1, 1),
-            (-1, 0, 1),
-            (0, -1, 1),
-            (-1, -1, math.sqrt(2)),
-            (-1, 1, math.sqrt(2)),
-            (1, -1, math.sqrt(2)),
-            (1, 1, math.sqrt(2)),
+            (1, 0, 1),  # Right
+            (0, 1, 1),  # Up
+            (-1, 0, 1),  # Left
+            (0, -1, 1),  # Down
+            (-1, -1, math.sqrt(2)),  # Bottom-left diagonal
+            (-1, 1, math.sqrt(2)),  # Top-left diagonal
+            (1, -1, math.sqrt(2)),  # Bottom-right diagonal
+            (1, 1, math.sqrt(2)),  # Top-right diagonal
         ]
 
     def line_of_sight(self, a, b):
@@ -90,26 +91,30 @@ class ThetaStarAlgorithm:
         x1, y1 = b
         dx = x1 - x0
         dy = y1 - y0
-        steps = int(max(abs(dx), abs(dy)))
+        steps = int(max(abs(dx), abs(dy)))  # Calculate steps for line interpolation
         if steps == 0:
             return True
         for i in range(steps + 1):
             t = i / steps
-            x = round(x0 + t * dx)
-            y = round(y0 + t * dy)
-            if (x, y) not in self.graph:
+            x = round(x0 + t * dx)  # Interpolate x-coordinate
+            y = round(y0 + t * dy)  # Interpolate y-coordinate
+            if (
+                x,
+                y,
+            ) not in self.graph:  # Check if the interpolated point is a valid node
                 return False
         return True
 
     def calc_heuristic(self, n1, n2):
         """
-        Euclidean distance heuristic.
+        Euclidean distance heuristic to estimate the cost from node n1 to node n2.
         """
         return math.hypot(n1[0] - n2[0], n1[1] - n2[1])
 
     def cost(self, a, b):
         """
         Return the cost between adjacent nodes a and b.
+        If an edge exists between the nodes, return the weight, otherwise calculate Euclidean distance.
         """
         if self.graph.has_edge(a, b):
             return self.graph[a][b]["weight"]
@@ -118,25 +123,31 @@ class ThetaStarAlgorithm:
     def theta_star_search(self, start, goal):
         """
         Perform Theta* search from start to goal.
+        Uses A* search with line-of-sight optimization.
         Returns the final path as a list of nodes.
         """
         open_set = []
-        heapq.heappush(open_set, (self.calc_heuristic(start, goal), start))
+        heapq.heappush(
+            open_set, (self.calc_heuristic(start, goal), start)
+        )  # Use heap for efficient priority queue
         came_from = {}
-        g = {start: 0}
+        g = {start: 0}  # Cost to reach each node from start
         came_from[start] = start  # The start's parent is itself.
-        closed_set = set()
+        closed_set = set()  # Set to track visited nodes
 
         while open_set:
-            current_f, current = heapq.heappop(open_set)
+            current_f, current = heapq.heappop(
+                open_set
+            )  # Pop the node with the smallest f-value
             if current == goal:
-                break
-            closed_set.add(current)
-            for neighbor in self.graph.neighbors(current):
+                break  # Exit if we reached the goal
+            closed_set.add(current)  # Mark the current node as visited
+            for neighbor in self.graph.neighbors(
+                current
+            ):  # Explore neighbors of current node
                 if neighbor in closed_set:
                     continue
-                # Use line-of-sight: if current is not the start and there is line-of-sight
-                # from the parent of current to neighbor, then try that path.
+                # Use line-of-sight optimization: check if we can shortcut using line-of-sight from parent to neighbor
                 if current != start and self.line_of_sight(
                     came_from[current], neighbor
                 ):
@@ -149,21 +160,25 @@ class ThetaStarAlgorithm:
                     parent_candidate = current
                 if neighbor not in g or tentative_g < g[neighbor]:
                     g[neighbor] = tentative_g
-                    f = tentative_g + self.calc_heuristic(neighbor, goal)
+                    f = tentative_g + self.calc_heuristic(
+                        neighbor, goal
+                    )  # f = g + h (heuristic)
                     came_from[neighbor] = parent_candidate
-                    heapq.heappush(open_set, (f, neighbor))
+                    heapq.heappush(
+                        open_set, (f, neighbor)
+                    )  # Push the neighbor into the priority queue
 
         # If goal was never reached, return empty path.
         if goal not in came_from:
             return []
 
-        # Reconstruct path from goal to start.
+        # Reconstruct path from goal to start by backtracking through the came_from dictionary.
         path = [goal]
         current = goal
         while current != start:
             current = came_from[current]
             path.append(current)
-        path.reverse()
+        path.reverse()  # Reverse the path to start from the beginning
         return path
 
     def calculate_path_length(self, path):
@@ -186,7 +201,7 @@ class ThetaStarAlgorithm:
                 path[i - 1][1] - path[i - 2][1],
             )
             curr_dir = (path[i][0] - path[i - 1][0], path[i][1] - path[i - 1][1])
-            if prev_dir != curr_dir:
+            if prev_dir != curr_dir:  # If the direction changes
                 changes += 1
         return changes
 

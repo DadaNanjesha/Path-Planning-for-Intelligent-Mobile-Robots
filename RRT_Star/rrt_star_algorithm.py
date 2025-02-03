@@ -19,6 +19,18 @@ class RRTStar:
         step_size=5.0,
         goal_sample_rate=5,
     ):
+        """
+        Initializes the RRT* algorithm with given parameters.
+
+        Parameters:
+            x_obs, y_obs: Lists of obstacle coordinates.
+            x_min, y_min, x_max, y_max: Boundaries of the environment grid.
+            robot_radius: The clearance around the robot to avoid obstacles.
+            max_iter: Maximum number of iterations for the RRT* search.
+            step_size: Step size for extending the tree towards a random sample.
+            goal_sample_rate: Probability of randomly selecting the goal node during the search.
+        """
+        # Boundaries and robot parameters
         self.x_min = x_min
         self.y_min = y_min
         self.x_max = x_max
@@ -27,18 +39,28 @@ class RRTStar:
         self.max_iter = max_iter
         self.step_size = step_size
         self.goal_sample_rate = goal_sample_rate
+
+        # Obstacles and graph initialization
         self.obstacles = set(zip(x_obs, y_obs))
         self.graph = nx.Graph()
+
+        # Start and goal positions (to be set during planning)
         self.start = None
         self.goal = None
+
+        # Visualization setup
         self.fig, self.ax = plt.subplots(figsize=(10, 10))
         self.setup_visualization()
+
+        # Metrics for tracking path performance
         self.metrics = {
             "execution_time": 0,
             "path_length": 0,
             "steps_taken": 0,
             "direction_changes": 0,
         }
+
+        # Pathfinding auxiliary data structures
         self.came_from = {}
         self.cost = {}
 
@@ -46,51 +68,86 @@ class RRTStar:
         """Initialize visualization with obstacles and axis settings."""
         self.ax.set_xlim(self.x_min, self.x_max)
         self.ax.set_ylim(self.y_min, self.y_max)
+
+        # Plot obstacles
         if self.obstacles:
             self.ax.scatter(
                 *zip(*self.obstacles), color="black", s=15, label="Obstacles"
             )
+
+        # Ensure aspect ratio is equal for proper scaling of the plot
         self.ax.set_aspect("equal")
 
     def planning(self, start, goal, dynamic_visualization=False):
+        """
+        Perform RRT* path planning to find a path from the start to the goal.
+
+        Parameters:
+            start: Starting position (tuple).
+            goal: Goal position (tuple).
+            dynamic_visualization: Boolean to enable dynamic visualization of the search process.
+
+        Returns:
+            path: A list of nodes representing the computed path from start to goal.
+        """
         start_time = time.time()
+
+        # Initialize start and goal
         self.start = tuple(start)
         self.goal = tuple(goal)
         self.graph.add_node(self.start)
         self.came_from[self.start] = None
         self.cost[self.start] = 0
 
-        # Draw start and goal
+        # Plot start and goal positions
         self.ax.scatter(*self.start, color="blue", s=50, label="Start")
         self.ax.scatter(*self.goal, color="green", s=50, label="Goal")
         plt.legend()
 
+        # RRT* planning loop
         for _ in range(self.max_iter):
+            # Generate random node (biased towards the goal sometimes)
             rnd_node = self.get_random_node()
             nearest_node = self.get_nearest_node(rnd_node)
             new_node = self.steer(nearest_node, rnd_node)
 
+            # Check for collision and process the new node
             if self.check_collision(nearest_node, new_node):
                 near_nodes = self.find_near_nodes(new_node)
                 self.connect_nodes(nearest_node, new_node, near_nodes)
 
+                # Visualize the current node and edge if required
                 if dynamic_visualization:
                     self.update_visualization(new_node)
 
+                # Try to connect the new node to the goal
                 if self.try_connect_to_goal(new_node):
                     break
 
+        # Record execution time and finalize the path
         self.metrics["execution_time"] = time.time() - start_time
         path = self.finalize_path()
         self.show_metrics()
+
+        # Display the path planning visualization
         plt.title("RRT* Path Planning")
         plt.show()
+
         return path
 
     def connect_nodes(self, nearest_node, new_node, near_nodes):
+        """
+        Connect the new node to the tree, considering nearby nodes for optimization.
+
+        Parameters:
+            nearest_node: The closest node to the new node.
+            new_node: The newly generated node to add to the tree.
+            near_nodes: A list of nearby nodes to check for possible better connections.
+        """
         min_cost_node = nearest_node
         min_cost = self.cost[nearest_node] + self.calc_distance(nearest_node, new_node)
 
+        # Find the best connecting node based on cost and collision checks
         for near_node in near_nodes:
             if self.check_collision(near_node, new_node):
                 tentative_cost = self.cost[near_node] + self.calc_distance(
@@ -100,10 +157,12 @@ class RRTStar:
                     min_cost = tentative_cost
                     min_cost_node = near_node
 
+        # Add the best node connection to the graph
         self.graph.add_edge(min_cost_node, new_node, weight=min_cost)
         self.came_from[new_node] = min_cost_node
         self.cost[new_node] = min_cost
 
+        # Check if the new node can optimize connections to near nodes
         for near_node in near_nodes:
             if self.check_collision(new_node, near_node):
                 tentative_cost = self.cost[new_node] + self.calc_distance(
@@ -114,6 +173,7 @@ class RRTStar:
                     self.cost[near_node] = tentative_cost
 
     def finalize_path(self):
+        """Finalize the path from start to goal by backtracking through the came_from dictionary."""
         path = self.get_path(self.goal)
         if path:
             self.draw_final_path(path)

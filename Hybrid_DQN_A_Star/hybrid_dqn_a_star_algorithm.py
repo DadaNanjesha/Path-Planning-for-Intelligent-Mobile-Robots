@@ -20,88 +20,104 @@ class GraphEnvironment:
         Initializes the grid-based environment.
 
         Parameters:
-          x_obs, y_obs: Lists of obstacle coordinates.
-          resol: Grid resolution.
-          radius: Clearance (robot radius) to remove nodes near obstacles.
-          start: Starting position tuple.
-          goal: Goal position tuple.
+            x_obs, y_obs: Lists of obstacle coordinates.
+            resol: Grid resolution.
+            radius: Clearance (robot radius) to remove nodes near obstacles.
+            start: Starting position tuple.
+            goal: Goal position tuple.
         """
-        self.resol = resol
-        self.radius = radius
-        self.start = (int(start[0]), int(start[1]))
-        self.goal = (int(goal[0]), int(goal[1]))
-        self.graph = nx.Graph()
-        self.obstacles = set()
+        self.resol = resol  # Grid resolution (spacing between nodes)
+        self.radius = radius  # Robot's clearance radius (used to avoid obstacles)
+        self.start = (int(start[0]), int(start[1]))  # Starting node (x, y)
+        self.goal = (int(goal[0]), int(goal[1]))  # Goal node (x, y)
+        self.graph = nx.Graph()  # Initialize a graph for the grid
+        self.obstacles = set()  # Set to store obstacle nodes
         self.motion = self.motion_mod()  # 8-connected motion model
-        self.build_graph(x_obs, y_obs)
-        self.state = self.start
+        self.build_graph(x_obs, y_obs)  # Build the graph with obstacles
+        self.state = self.start  # Set the initial state to the start position
 
     def build_graph(self, x_obs, y_obs):
         """
         Build the grid graph:
-          - Create nodes for every (x, y) within the grid bounds.
-          - Remove nodes that lie within the clearance (radius) of any obstacle.
-          - Connect the remaining nodes using an 8-connected motion model.
+            - Create nodes for every (x, y) within the grid bounds.
+            - Remove nodes that lie within the clearance (radius) of any obstacle.
+            - Connect the remaining nodes using an 8-connected motion model.
         """
-        self.x_min = round(min(x_obs))
-        self.y_min = round(min(y_obs))
-        self.max_x = round(max(x_obs))
-        self.max_y = round(max(y_obs))
+        self.x_min = round(min(x_obs))  # Minimum x-bound of the grid
+        self.y_min = round(min(y_obs))  # Minimum y-bound of the grid
+        self.max_x = round(max(x_obs))  # Maximum x-bound of the grid
+        self.max_y = round(max(y_obs))  # Maximum y-bound of the grid
 
-        # Create grid nodes.
+        # Create grid nodes for all positions within the grid bounds.
         nodes = [
             (x, y)
             for x in range(self.x_min, self.max_x + 1)
             for y in range(self.y_min, self.max_y + 1)
         ]
-        self.graph.add_nodes_from(nodes)
+        self.graph.add_nodes_from(nodes)  # Add all nodes to the graph
 
-        # Precompute squared radius.
+        # Precompute squared radius to avoid repeated square root calculations.
         r2 = self.radius**2
 
         # Remove nodes that are too close to obstacles.
-        for ox, oy in zip(x_obs, y_obs):
-            min_x_obs = max(self.x_min, int(math.floor(ox - self.radius)))
-            max_x_obs = min(self.max_x, int(math.ceil(ox + self.radius)))
-            min_y_obs = max(self.y_min, int(math.floor(oy - self.radius)))
-            max_y_obs = min(self.max_y, int(math.ceil(oy + self.radius)))
+        for ox, oy in zip(x_obs, y_obs):  # Iterate over each obstacle
+            min_x_obs = max(
+                self.x_min, int(math.floor(ox - self.radius))
+            )  # Left boundary of obstacle
+            max_x_obs = min(
+                self.max_x, int(math.ceil(ox + self.radius))
+            )  # Right boundary of obstacle
+            min_y_obs = max(
+                self.y_min, int(math.floor(oy - self.radius))
+            )  # Bottom boundary of obstacle
+            max_y_obs = min(
+                self.max_y, int(math.ceil(oy + self.radius))
+            )  # Top boundary of obstacle
             for x in range(min_x_obs, max_x_obs + 1):
                 for y in range(min_y_obs, max_y_obs + 1):
-                    if (ox - x) ** 2 + (oy - y) ** 2 <= r2:
+                    if (ox - x) ** 2 + (
+                        oy - y
+                    ) ** 2 <= r2:  # Check if node is within obstacle clearance
                         node = (x, y)
                         if node in self.graph:
-                            self.obstacles.add(node)
-                            self.graph.remove_node(node)
+                            self.obstacles.add(node)  # Add to obstacles
+                            self.graph.remove_node(
+                                node
+                            )  # Remove the node from the graph
 
         # Connect remaining nodes using allowed motions.
         remaining_nodes = list(self.graph.nodes)
         for node in remaining_nodes:
-            for dx, dy, cost in self.motion:
+            for dx, dy, cost in self.motion:  # For each valid direction
                 neighbor = (node[0] + dx, node[1] + dy)
                 if neighbor in self.graph:
-                    self.graph.add_edge(node, neighbor, weight=cost)
+                    self.graph.add_edge(
+                        node, neighbor, weight=cost
+                    )  # Add edge with cost
 
     @staticmethod
     def motion_mod():
         """
         Returns the 8-connected motion vectors and their costs.
+
+        Directions are in the format: (dx, dy, cost)
         """
         return [
-            (1, 0, 1),
-            (0, 1, 1),
-            (-1, 0, 1),
-            (0, -1, 1),
-            (-1, -1, math.sqrt(2)),
-            (-1, 1, math.sqrt(2)),
-            (1, -1, math.sqrt(2)),
-            (1, 1, math.sqrt(2)),
+            (1, 0, 1),  # Right (cost 1)
+            (0, 1, 1),  # Up (cost 1)
+            (-1, 0, 1),  # Left (cost 1)
+            (0, -1, 1),  # Down (cost 1)
+            (-1, -1, math.sqrt(2)),  # Diagonal left-down (cost sqrt(2))
+            (-1, 1, math.sqrt(2)),  # Diagonal left-up (cost sqrt(2))
+            (1, -1, math.sqrt(2)),  # Diagonal right-down (cost sqrt(2))
+            (1, 1, math.sqrt(2)),  # Diagonal right-up (cost sqrt(2))
         ]
 
     def reset(self):
         """
         Resets the environment state to the start.
         """
-        self.state = self.start
+        self.state = self.start  # Set the state back to the start position
         return self.get_state()
 
     def get_state(self):
@@ -124,8 +140,11 @@ class GraphEnvironment:
         if action < 0 or action >= len(self.motion):
             raise ValueError("Invalid action")
 
-        dx, dy, cost = self.motion[action]
-        next_node = (self.state[0] + dx, self.state[1] + dy)
+        dx, dy, cost = self.motion[action]  # Get the direction and cost
+        next_node = (
+            self.state[0] + dx,
+            self.state[1] + dy,
+        )  # Calculate the next node based on action
 
         if next_node not in self.graph:
             # Invalid move: collision or out-of-bounds.
@@ -141,7 +160,7 @@ class GraphEnvironment:
                 done = True
 
         if next_node in self.graph:
-            self.state = next_node
+            self.state = next_node  # Update the current state
         return self.get_state(), reward, done
 
 
@@ -154,14 +173,14 @@ class DQN(nn.Module):
         A simple feedforward neural network with two hidden layers.
         """
         super(DQN, self).__init__()
-        self.fc1 = nn.Linear(input_dim, 128)
-        self.fc2 = nn.Linear(128, 128)
-        self.fc3 = nn.Linear(128, output_dim)
+        self.fc1 = nn.Linear(input_dim, 128)  # First hidden layer
+        self.fc2 = nn.Linear(128, 128)  # Second hidden layer
+        self.fc3 = nn.Linear(128, output_dim)  # Output layer
 
     def forward(self, x):
-        x = torch.relu(self.fc1(x))
-        x = torch.relu(self.fc2(x))
-        return self.fc3(x)
+        x = torch.relu(self.fc1(x))  # Apply ReLU activation on the first layer
+        x = torch.relu(self.fc2(x))  # Apply ReLU activation on the second layer
+        return self.fc3(x)  # Output layer
 
 
 # =============================================================================
@@ -169,16 +188,30 @@ class DQN(nn.Module):
 # =============================================================================
 class ReplayMemory:
     def __init__(self, capacity):
+        """
+        Initializes the replay memory with a given capacity.
+        """
         self.capacity = capacity
-        self.memory = deque(maxlen=capacity)
+        self.memory = deque(
+            maxlen=capacity
+        )  # Using deque to maintain a fixed-size memory buffer
 
     def push(self, state, action, reward, next_state, done):
+        """
+        Stores a transition (state, action, reward, next_state, done) in memory.
+        """
         self.memory.append((state, action, reward, next_state, done))
 
     def sample(self, batch_size):
+        """
+        Returns a random sample of transitions from memory.
+        """
         return random.sample(self.memory, batch_size)
 
     def __len__(self):
+        """
+        Returns the number of transitions in memory.
+        """
         return len(self.memory)
 
 
@@ -198,60 +231,74 @@ class DQNAgent:
         memory_capacity=10000,
         batch_size=64,
     ):
+        """
+        Initializes the DQN agent with parameters like learning rate, gamma, epsilon, etc.
+        """
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.policy_net = DQN(state_dim, action_dim).to(self.device)
         self.target_net = DQN(state_dim, action_dim).to(self.device)
         self.target_net.load_state_dict(self.policy_net.state_dict())
-        self.target_net.eval()
-        self.optimizer = optim.Adam(self.policy_net.parameters(), lr=lr)
-        self.memory = ReplayMemory(memory_capacity)
-        self.gamma = gamma
-        self.epsilon = epsilon_start
-        self.epsilon_min = epsilon_end
-        self.epsilon_decay = epsilon_decay
-        self.batch_size = batch_size
-        self.action_dim = action_dim
+        self.target_net.eval()  # Set the target network to evaluation mode
+        self.optimizer = optim.Adam(
+            self.policy_net.parameters(), lr=lr
+        )  # Optimizer for policy network
+        self.memory = ReplayMemory(memory_capacity)  # Initialize replay memory
+        self.gamma = gamma  # Discount factor for future rewards
+        self.epsilon = epsilon_start  # Initial epsilon for exploration
+        self.epsilon_min = epsilon_end  # Minimum epsilon
+        self.epsilon_decay = epsilon_decay  # Epsilon decay rate
+        self.batch_size = batch_size  # Mini-batch size for training
+        self.action_dim = action_dim  # Number of possible actions
 
     def select_action(self, state):
         """
         Selects an action using an epsilon-greedy strategy.
         """
         if random.random() < self.epsilon:
-            return random.randrange(self.action_dim)
+            return random.randrange(self.action_dim)  # Exploration
         else:
             state_tensor = torch.FloatTensor(state).unsqueeze(0).to(self.device)
             with torch.no_grad():
-                q_values = self.policy_net(state_tensor)
-            return q_values.argmax().item()
+                q_values = self.policy_net(
+                    state_tensor
+                )  # Get Q-values from policy network
+            return (
+                q_values.argmax().item()
+            )  # Select the action with the highest Q-value
 
     def optimize(self):
         """
         Samples a mini-batch from replay memory and performs a gradient descent step.
         """
         if len(self.memory) < self.batch_size:
-            return
+            return  # Not enough samples to train
+
         transitions = self.memory.sample(self.batch_size)
         batch_state, batch_action, batch_reward, batch_next_state, batch_done = zip(
             *transitions
         )
 
+        # Convert to tensors
         batch_state = torch.FloatTensor(batch_state).to(self.device)
         batch_action = torch.LongTensor(batch_action).unsqueeze(1).to(self.device)
         batch_reward = torch.FloatTensor(batch_reward).unsqueeze(1).to(self.device)
         batch_next_state = torch.FloatTensor(batch_next_state).to(self.device)
         batch_done = torch.FloatTensor(batch_done).unsqueeze(1).to(self.device)
 
+        # Compute the Q-values for the current states
         q_values = self.policy_net(batch_state).gather(1, batch_action)
         with torch.no_grad():
             next_q_values = self.target_net(batch_next_state).max(1)[0].unsqueeze(1)
-            target_q = batch_reward + (1 - batch_done) * self.gamma * next_q_values
+            target_q = (
+                batch_reward + (1 - batch_done) * self.gamma * next_q_values
+            )  # Bellman equation
 
-        loss = nn.MSELoss()(q_values, target_q)
-        self.optimizer.zero_grad()
-        loss.backward()
-        self.optimizer.step()
+        loss = nn.MSELoss()(q_values, target_q)  # Mean squared error loss
+        self.optimizer.zero_grad()  # Zero out the gradients
+        loss.backward()  # Backpropagate the loss
+        self.optimizer.step()  # Update the policy network
 
-        # Decay epsilon
+        # Decay epsilon for exploration
         if self.epsilon > self.epsilon_min:
             self.epsilon *= self.epsilon_decay
 
@@ -260,6 +307,9 @@ class DQNAgent:
 # Training Loop
 # =============================================================================
 def train_dqn(env, agent, num_episodes=500, max_steps=200):
+    """
+    Train the DQN agent in the environment for a number of episodes.
+    """
     episode_rewards = []
     for episode in range(num_episodes):
         state = env.reset()
@@ -267,16 +317,20 @@ def train_dqn(env, agent, num_episodes=500, max_steps=200):
         done = False
         steps = 0
         while not done and steps < max_steps:
-            action = agent.select_action(state)
-            next_state, reward, done = env.step(action)
-            agent.memory.push(state, action, reward, next_state, done)
+            action = agent.select_action(state)  # Select action
+            next_state, reward, done = env.step(action)  # Execute the action
+            agent.memory.push(
+                state, action, reward, next_state, done
+            )  # Store the transition
             state = next_state
             total_reward += reward
             steps += 1
-            agent.optimize()
+            agent.optimize()  # Optimize the agent's policy
         episode_rewards.append(total_reward)
         if episode % 10 == 0:
-            agent.target_net.load_state_dict(agent.policy_net.state_dict())
+            agent.target_net.load_state_dict(
+                agent.policy_net.state_dict()
+            )  # Update target network
         if episode % 50 == 0:
             print(
                 f"Episode {episode}: Total Reward = {total_reward:.2f}, Epsilon = {agent.epsilon:.3f}"
