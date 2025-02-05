@@ -166,11 +166,13 @@ class DStarAlgorithm:
         # Metrics
         path_length = self.calculate_path_length(path)
         execution_time = time.time() - start_time
+        direction_changes = self.calculate_direction_changes(path)
 
         # Print out relevant metrics.
         print(f"Execution Time: {execution_time:.2f} seconds")
         print(f"Path Length: {path_length:.2f}")
         print(f"Steps Taken: {len(path)}")
+        print(f"Direction Changes: {direction_changes}")
 
         plt.title("D* Path Planning")
         plt.legend()
@@ -230,6 +232,24 @@ class DStarAlgorithm:
             math.hypot(path[i + 1][0] - path[i][0], path[i + 1][1] - path[i][1])
             for i in range(len(path) - 1)
         )
+
+    @staticmethod
+    def calculate_direction_changes(path):
+        """
+        Calculate the number of direction changes in the path.
+        Arguments:
+        - path: List of nodes in the path.
+        """
+        changes = 0
+        for i in range(2, len(path)):
+            prev_dir = (
+                path[i - 1][0] - path[i - 2][0],
+                path[i - 1][1] - path[i - 2][1],
+            )
+            curr_dir = (path[i][0] - path[i - 1][0], path[i][1] - path[i - 1][1])
+            if prev_dir != curr_dir:
+                changes += 1
+        return changes
 
 
 def main():
