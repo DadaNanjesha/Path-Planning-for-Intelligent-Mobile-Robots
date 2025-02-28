@@ -122,6 +122,22 @@ Pathfinding results can be visualized using the generated `.gif` files in the `m
 
 ---
 
+# **Final Performance Comparison Table**
+
+This table provides a performance comparison of various path-planning algorithms implemented in this project.
+
+| Algorithm          | Execution Time (s) | Path Length | Steps Taken | Direction Changes | Optimality | Computational Efficiency | Scalability | Adaptability to Dynamic Environments | Best Use Cases |
+|--------------------|-------------------|-------------|-------------|-------------------|------------|---------------------------|-------------|--------------------------------------|----------------|
+| A*                | 20.45 - 30.48      | 85.05       | 67          | 13                | High       | Low                       | Low         | Low                                  | Structured static environments (e.g., warehouse automation) |
+| Bidirectional A*  | 4.20 - 5.46        | 96.77       | 87          | 7                 | Moderate   | High                      | Moderate    | High                                 | Dynamic environments with known obstacles |
+| D*               | 20.50 - 22.11      | 85.05       | 67          | 13                | High       | Low                       | Low         | Moderate                             | Real-time replanning in semi-dynamic environments |
+| RRT*             | 8.03 - 39.19       | 104.69 - 113.35 | 22 - 24   | 21 - 22           | Low - Moderate | Moderate              | High        | High                                 | Exploration & high-dimensional navigation |
+| Theta*           | 0.08 - 0.12        | 82.27       | 6           | 4                 | Very High  | Very High                 | High        | Low                                  | Precise trajectory planning & smooth motion |
+| DQN-A*           | 0.01               | 85.05       | 67          | 13                | High       | Very High                 | Very High   | Very High                            | AI-enhanced real-time obstacle avoidance |
+
+This comparison helps in selecting the appropriate algorithm based on the application requirements, balancing optimality, efficiency, and adaptability.
+
+
 ## 🤝 Contributing
 Contributions are welcome! To contribute:
 1. Fork the repository
