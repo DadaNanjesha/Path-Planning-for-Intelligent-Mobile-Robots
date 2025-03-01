@@ -11,7 +11,7 @@ authors:
 # Project Information
 title: "Path-Planning-for-Intelligent-Mobile-Robots"
 version: 1.0.1
-doi: "10.5281/zenodo.14954658"
+doi: "10.5281/zenodo.14954689"
 date-released: 2025-02-02
 url: "https://github.com/DadaNanjesha/Path-Planning-for-Intelligent-Mobile-Robots"
 repository-code: "https://github.com/DadaNanjesha/Path-Planning-for-Intelligent-Mobile-Robots"
@@ -32,7 +32,7 @@ keywords:
 # Additional Links
 references:
   - type: doi
-    value: "DOI: 10.5281/zenodo.14954658"
+    value: "10.5281/zenodo.14954689"
   - type: url
     value: "https://dada-nanjesha.github.io"
   - type: url
