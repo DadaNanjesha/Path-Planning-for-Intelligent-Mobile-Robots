@@ -184,15 +184,15 @@ If you find this repository useful for your work, please consider citing it in y
 ### **APA 7th Edition**
 
 ```plaintext
-Gouda Shanbog, D. N. (2025). *Path-Planning-for-Intelligent-Mobile-Robots* (Version 1.0.0) [Computer software]. GitHub. https://github.com/DadaNanjesha/Path-Planning-for-Intelligent-Mobile-Robots
+Gouda Shanbog, D. N.(2025). *Path-Planning-for-Intelligent-Mobile-Robots* (Version 1.0.1) [Computer software]. GitHub. https://github.com/DadaNanjesha/Path-Planning-for-Intelligent-Mobile-Robots
 ```
 - BibTeX
 ```
 @software{GoudaShanbog_PathPlanning_2025,
   author = {Gouda Shanbog, Dada Nanjesha},
   title = {Path-Planning-for-Intelligent-Mobile-Robots},
-  version = {1.0.0},
-  date = {2025-01-20},
+  version = {1.0.1},
+  date = {2025-03-01},
   url = {https://github.com/DadaNanjesha/Path-Planning-for-Intelligent-Mobile-Robots},
   doi = {10.5281/zenodo.14954658},
   license = {MIT}
