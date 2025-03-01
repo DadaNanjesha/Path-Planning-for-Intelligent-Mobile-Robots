@@ -1,0 +1,41 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below. For more details, visit the repository or contact the author."
+
+# Author Information
+authors:
+  - family-names: Gouda Shanbog
+    given-names: Dada Nanjesha
+    affiliation: "Independent Researcher"
+    website: "https://dada-nanjesha.github.io"
+
+# Project Information
+title: "Path-Planning-for-Intelligent-Mobile-Robots"
+version: 1.0.0
+doi: "10.5281/zenodo.14954658"
+date-released: 2025-01-20
+url: "https://github.com/DadaNanjesha/Path-Planning-for-Intelligent-Mobile-Robots"
+repository-code: "https://github.com/DadaNanjesha/Path-Planning-for-Intelligent-Mobile-Robots"
+license: MIT
+
+# Keywords
+keywords:
+  - "Path Planning"
+  - "Mobile Robots"
+  - "A* Algorithm"
+  - "RRT*"
+  - "D*"
+  - "Theta*"
+  - "DQN-A*"
+  - "Robotics"
+  - "Artificial Intelligence"
+
+# Additional Links
+references:
+  - type: doi
+    value: "DOI: 10.5281/zenodo.14954658"
+  - type: url
+    value: "https://dada-nanjesha.github.io"
+  - type: url
+    value: "https://github.com/DadaNanjesha"
+  - type: url
+    value: "https://github.com/DadaNanjesha/Path-Planning-for-Intelligent-Mobile-Robots/wiki" 
