@@ -192,7 +192,7 @@ Gouda Shanbog, D. N.(2025). *Path-Planning-for-Intelligent-Mobile-Robots* (Versi
   author = {Gouda Shanbog, Dada Nanjesha},
   title = {Path-Planning-for-Intelligent-Mobile-Robots},
   version = {1.0.1},
-  date = {2025-03-01},
+  date = {2025-02-02},
   url = {https://github.com/DadaNanjesha/Path-Planning-for-Intelligent-Mobile-Robots},
   doi = {10.5281/zenodo.14954658},
   license = {MIT}
