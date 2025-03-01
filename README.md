@@ -20,49 +20,49 @@ The repository includes implementations of:
 
 ## 📂 Directory Structure
 ```plaintext
-Advanced_Path_Planning
-│── A_Star
-│   ├── README.md
-│   ├── a_star_algorithm.py
-│   ├── a_star_bidirectional_algorithm.py
+📦 Advanced_Path_Planning
+├── 📂 A_Star
+│   ├── 📄 README.md
+│   ├── 📄 a_star_algorithm.py
+│   ├── 📄 a_star_bidirectional_algorithm.py
 │
-│── D_Star
-│   ├── README.md
-│   ├── d_star.py
+├── 📂 D_Star
+│   ├── 📄 README.md
+│   ├── 📄 d_star.py
 │
-│── Hybrid_DQN_A_Star
-│   ├── README.md
-│   ├── hybrid_dqn_a_star_algorithm.py
+├── 📂 Hybrid_DQN_A_Star
+│   ├── 📄 README.md
+│   ├── 📄 hybrid_dqn_a_star_algorithm.py
 │
-│── RRT_Star
-│   ├── README.md
-│   ├── rrt_star_algorithm.py
+├── 📂 RRT_Star
+│   ├── 📄 README.md
+│   ├── 📄 rrt_star_algorithm.py
 │
-│── Theta_Star
-│   ├── README.md
-│   ├── theta_star_algorithm.py
+├── 📂 Theta_Star
+│   ├── 📄 README.md
+│   ├── 📄 theta_star_algorithm.py
 │
-│── media
-│   ├── astar.gif
-│   ├── astar_bidirectional.gif
-│   ├── dstar.gif
-│   ├── dqn_astar.gif
-│   ├── rrtstar.gif
-│   ├── thetastar.gif
+├── 📂 media
+│   ├── 📹 astar.gif
+│   ├── 📹 astar_bidirectional.gif
+│   ├── 📹 dstar.gif
+│   ├── 📹 dqn_astar.gif
+│   ├── 📹 rrtstar.gif
+│   ├── 📹 thetastar.gif
 │
-│── test
-│   ├── test_astar.py
-│   ├── test_dstar.py
-│   ├── test_hybrid_dqn_a_star.py
-│   ├── test_rrt_star.py
-│   ├── test_theta_star.py
+├── 📂 test
+│   ├── 📄 test_astar.py
+│   ├── 📄 test_dstar.py
+│   ├── 📄 test_hybrid_dqn_a_star.py
+│   ├── 📄 test_rrt_star.py
+│   ├── 📄 test_theta_star.py
 │
-│── .gitignore
-│── LICENSE
-│── README.md
-│── requirements.txt
-│── setup.py
-│── .github
+├── 📄 .gitignore
+├── 📄 LICENSE
+├── 📄 README.md
+├── 📄 requirements.txt
+├── 📄 setup.py
+├── 📂 .github
 
 ```
 
