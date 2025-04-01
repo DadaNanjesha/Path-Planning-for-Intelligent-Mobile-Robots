@@ -93,7 +93,7 @@ Modify the scripts as needed to test different environments or configurations.
 The project contains several advanced path planning techniques, including:
 ### 🔹 **A\* Algorithm**
 A classic grid-based path planning method that computes the optimal path using an 8-connected graph and a Euclidean distance heuristic.  
-<img src="media/astar.gif" width="300" height="300" alt="A* Algorithm">
+<img src="media/astar.gif" width="300" height="300" alt="A* Algorithm.">
 
 ### 🔹 **Bidirectional A\***
 An enhanced version of A\* that simultaneously searches from the start and goal, potentially reducing the search time.  
