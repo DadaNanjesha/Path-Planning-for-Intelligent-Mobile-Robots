@@ -64,7 +64,14 @@ The **matplotlib-based visualization** dynamically updates as the search progres
 ✔ **Final path** is plotted in red.  
 ✔ **Obstacles & environment** remain static.  
 
-### 📌 D* Path Planning GIF
-![D* Algorithm](path_to_your_D_star_gif.gif)
+---
+
+## 🎞️ GIF Demonstrations
+
+### 📌 Watch the D* algorithm in action:
+
+
+<img src="https://github.com/DadaNanjesha/Path-Planning-for-Intelligent-Mobile-Robots/blob/main/media/dstar.gif" alt="A* Algorithm" width="500" height="500">
+
 
 ---
