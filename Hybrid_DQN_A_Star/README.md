@@ -101,5 +101,15 @@ where \( (x_1, y_1) \) and \( (x_2, y_2) \) are the node coordinates.
 
 ---
 
+
+## 🎞️ GIF Demonstrations
+
+### 📌 Watch the Hybrid DQN-A* algorithm in action:
+
+
+<img src="https://github.com/DadaNanjesha/Path-Planning-for-Intelligent-Mobile-Robots/blob/main/media/dqn_astar.gif" alt="A* Algorithm" width="500" height="500">
+
+
+---
 🎉 **Happy Path Planning! 🚀**
 
